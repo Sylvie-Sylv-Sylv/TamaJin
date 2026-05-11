@@ -8,9 +8,17 @@ An OOP Python Game Engine aimed for clean and scalable system design suited for 
 
 ### System Design Principles
 
+* Consistency
+
 ---
 
 ### OOP Design Philosophies
+
+#### SOLID
+
+#### DRY
+
+#### KISS
 
 #### Data-driven Composition over Composition over Inheritance
 
@@ -28,12 +36,12 @@ Why we favor data-driven composition over traditional composition and favor data
 
 #### Monolithic
 
-- This architecture is crucial for prototyping.
+* This architecture is crucial for prototyping.
 
 #### Microservices
 
-- This architecture is crucial for managing large games.
+* This architecture is crucial for managing large games.
 
 #### Event driven architecture
 
-- This architecture is especially useful for games.
+* This architecture is especially useful for games.
