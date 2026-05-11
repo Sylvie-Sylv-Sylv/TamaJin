@@ -1,4 +1,6 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 class Unit(ABC):
-    pass
+        @abstractmethod
+        def __init__(self, id : str):
+                self.id = id
