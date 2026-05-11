@@ -12,8 +12,6 @@ An OOP Python Game Engine aimed for clean and scalable system design suited for 
 
 ---
 
-Here are the elaborations for those core OOP design philosophies, formatted for easy copying:
-
 ### OOP Design Philosophies
 
 #### SOLID
