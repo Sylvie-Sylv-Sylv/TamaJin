@@ -1,16 +1,14 @@
-from abc import ABC
+import i_unit
 
-import unit
-
-class UnitHolder(ABC):
+class UnitHolder():
         """
                 Container class for managing units by type and id.
                 This can be used for various purposes, such as managing game entities, components, or any other units that need to be organized by type and id.
         """
         def __init__(self):
-                self.units : dict[str, dict[str, list[unit.Unit]]]= {}
+                self.units : dict[str, dict[str, list[i_unit.Unit]]]= {}
         
-        def add_unit(self, unit : unit.Unit):
+        def add_unit(self, unit : i_unit.Unit):
                 class_name = unit.__class__.__name__
                 
                 id = unit.id
@@ -23,9 +21,9 @@ class UnitHolder(ABC):
                 
                 self.units[class_name][id].append(unit)   
         
-        def fetch_units(self, unit_class : type[unit.Unit], id : str):
+        def fetch_units(self, unit_class : type[i_unit.Unit], id : str):
                 return self.units.get(unit_class.__name__, {}).get(id, [])
         
-        def remove_unit(self, unit_class : type[unit.Unit], id : str):
+        def remove_unit(self, unit_class : type[i_unit.Unit], id : str):
                 if unit_class.__name__ in self.units and id in self.units[unit_class.__name__]:
                         del self.units[unit_class.__name__][id]
