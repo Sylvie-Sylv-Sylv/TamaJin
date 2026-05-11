@@ -8,20 +8,24 @@ class UnitHolder(ABC):
                 This can be used for various purposes, such as managing game entities, components, or any other units that need to be organized by type and id.
         """
         def __init__(self):
-                self.components : dict[str, dict[str, list[unit.Unit]]]= {}
+                self.units : dict[str, dict[str, list[unit.Unit]]]= {}
         
-        def add_component(self, component : unit.Unit):
-                class_name = component.__class__.__name__
+        def add_unit(self, unit : unit.Unit):
+                class_name = unit.__class__.__name__
                 
-                id = component.id
+                id = unit.id
                 
-                if class_name not in self.components:
-                        self.components[class_name] = {}
+                if class_name not in self.units:
+                        self.units[class_name] = {}
                         
-                if id not in self.components[class_name]:
-                        self.components[class_name][id] = []
+                if id not in self.units[class_name]:
+                        self.units[class_name][id] = []
                 
-                self.components[class_name][id].append(component)   
+                self.units[class_name][id].append(unit)   
         
-        def get_components(self, component_class : type[unit.Unit], id : str):
-                return self.components.get(component_class.__name__, {}).get(id, [])
+        def fetch_units(self, unit_class : type[unit.Unit], id : str):
+                return self.units.get(unit_class.__name__, {}).get(id, [])
+        
+        def remove_unit(self, unit_class : type[unit.Unit], id : str):
+                if unit_class.__name__ in self.units and id in self.units[unit_class.__name__]:
+                        del self.units[unit_class.__name__][id]
