@@ -18,6 +18,8 @@ class UnitHolder():
                         
                 if id not in self.units[class_name]:
                         self.units[class_name][id] = []
+                        
+                unit.unit_holder = self
                 
                 self.units[class_name][id].append(unit)   
         

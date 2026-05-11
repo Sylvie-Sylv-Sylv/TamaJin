@@ -2,7 +2,7 @@ import moderngl as mgl
 
 from i_texture import ITexture
 from pg_texture import PGTexture
-from mgl_texture import MGLTexture
+from texture import Texture
 
 class ITextureLoader():
         """
@@ -50,4 +50,4 @@ class MGLTextureLoader(ITextureLoader):
                 
                 texture = self.ctx.texture(size, 4, data)
                 
-                return MGLTexture(texture)
+                return Texture(texture)
