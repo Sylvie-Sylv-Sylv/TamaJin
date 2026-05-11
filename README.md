@@ -45,3 +45,7 @@ Why we favor data-driven composition over traditional composition and favor data
 #### Event driven architecture
 
 * This architecture is especially useful for games.
+
+---
+
+## Features
