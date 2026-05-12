@@ -1,8 +1,9 @@
 import moderngl as mgl
 import pygame as pg
-import numpy as np
 
 from texture_array import TextureArray
+from vertex import Vertex
+from mesh import Mesh
 
 
 VERTEX_SHADER = """
@@ -54,7 +55,10 @@ def main():
         fragment_shader=FRAGMENT_SHADER
     )
 
-    # Create texture array
+    # ==========================================================
+    # Texture Array
+    # ==========================================================
+
     tex_array = TextureArray(
         ctx,
         {
@@ -67,47 +71,124 @@ def main():
     tex_array.use(0)
     program["texArray"] = 0
 
-    # Two quads side by side
-    #
-    # Format:
-    # x, y, u, v, tex_index
+    # ==========================================================
+    # Vertices
+    # ==========================================================
 
-    vertices = np.array([
-        # LEFT QUAD (test_1)
-        -0.9, -0.5, 0.0, 0.0, tex_array.get_index("test_1"),
-        -0.1, -0.5, 1.0, 0.0, tex_array.get_index("test_1"),
-        -0.1,  0.5, 1.0, 1.0, tex_array.get_index("test_1"),
+    t1 = tex_array.get_index("test_1")
+    t2 = tex_array.get_index("test_2")
 
-        -0.9, -0.5, 0.0, 0.0, tex_array.get_index("test_1"),
-        -0.1,  0.5, 1.0, 1.0, tex_array.get_index("test_1"),
-        -0.9,  0.5, 0.0, 1.0, tex_array.get_index("test_1"),
+    vertices = [
 
-        # RIGHT QUAD (test_2)
-         0.1, -0.5, 0.0, 0.0, tex_array.get_index("test_2"),
-         0.9, -0.5, 1.0, 0.0, tex_array.get_index("test_2"),
-         0.9,  0.5, 1.0, 1.0, tex_array.get_index("test_2"),
+        # ======================================================
+        # LEFT QUAD
+        # ======================================================
 
-         0.1, -0.5, 0.0, 0.0, tex_array.get_index("test_2"),
-         0.9,  0.5, 1.0, 1.0, tex_array.get_index("test_2"),
-         0.1,  0.5, 0.0, 1.0, tex_array.get_index("test_2"),
-    ], dtype="f4")
+        Vertex(
+            program,
+            in_pos=[-0.9, -0.5],
+            in_uv=[0.0, 0.0],
+            in_tex_index=t1
+        ),
 
-    vbo = ctx.buffer(vertices.tobytes())
+        Vertex(
+            program,
+            in_pos=[-0.1, -0.5],
+            in_uv=[1.0, 0.0],
+            in_tex_index=t1
+        ),
 
-    vao = ctx.vertex_array(
-        program,
-        [
-            (
-                vbo,
-                "2f 2f 1f",
-                "in_pos",
-                "in_uv",
-                "in_tex_index"
-            )
-        ]
+        Vertex(
+            program,
+            in_pos=[-0.1, 0.5],
+            in_uv=[1.0, 1.0],
+            in_tex_index=t1
+        ),
+
+        Vertex(
+            program,
+            in_pos=[-0.9, -0.5],
+            in_uv=[0.0, 0.0],
+            in_tex_index=t1
+        ),
+
+        Vertex(
+            program,
+            in_pos=[-0.1, 0.5],
+            in_uv=[1.0, 1.0],
+            in_tex_index=t1
+        ),
+
+        Vertex(
+            program,
+            in_pos=[-0.9, 0.5],
+            in_uv=[0.0, 1.0],
+            in_tex_index=t1
+        ),
+
+        # ======================================================
+        # RIGHT QUAD
+        # ======================================================
+
+        Vertex(
+            program,
+            in_pos=[0.1, -0.5],
+            in_uv=[0.0, 0.0],
+            in_tex_index=t2
+        ),
+
+        Vertex(
+            program,
+            in_pos=[0.9, -0.5],
+            in_uv=[1.0, 0.0],
+            in_tex_index=t2
+        ),
+
+        Vertex(
+            program,
+            in_pos=[0.9, 0.5],
+            in_uv=[1.0, 1.0],
+            in_tex_index=t2
+        ),
+
+        Vertex(
+            program,
+            in_pos=[0.1, -0.5],
+            in_uv=[0.0, 0.0],
+            in_tex_index=t2
+        ),
+
+        Vertex(
+            program,
+            in_pos=[0.9, 0.5],
+            in_uv=[1.0, 1.0],
+            in_tex_index=t2
+        ),
+
+        Vertex(
+            program,
+            in_pos=[0.1, 0.5],
+            in_uv=[0.0, 1.0],
+            in_tex_index=t2
+        ),
+    ]
+
+    # ==========================================================
+    # Mesh
+    # ==========================================================
+
+    mesh = Mesh(
+        ctx,
+        vertices,
+        program
     )
 
+    # ==========================================================
+    # Main Loop
+    # ==========================================================
+
     clock = pg.time.Clock()
+
     running = True
 
     while running:
@@ -117,13 +198,17 @@ def main():
 
         ctx.clear(0.1, 0.1, 0.1)
 
-        vao.render()
+        mesh.render()
 
         pg.display.flip()
+
         clock.tick(60)
 
-    vao.release()
-    vbo.release()
+    # ==========================================================
+    # Cleanup
+    # ==========================================================
+
+    mesh.release()
     tex_array.release()
     program.release()
 
