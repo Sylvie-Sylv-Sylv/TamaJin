@@ -15,12 +15,10 @@ class Texture(IUnit):
             data=img.tobytes()
         )
 
-        # Common defaults
         self.texture.filter = (filter, filter)
         self.texture.repeat_x = False
         self.texture.repeat_y = False
 
-        # Optional but usually desirable
         self.texture.build_mipmaps()
 
     def use(self, location: int = 0):

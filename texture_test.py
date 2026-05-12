@@ -113,7 +113,7 @@ def main():
     # Load texture
     texture = Texture(
         ctx,
-        "test.png",  # put an image next to this script
+        "test_1.png",  # put an image next to this script
         filter=mgl.NEAREST
     )
 
