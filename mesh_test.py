@@ -1,8 +1,9 @@
 import pygame
 import moderngl as mgl
+import sys
 from vertex import Vertex
 from mesh import Mesh
-import sys
+
 
 def main():
     pygame.init()

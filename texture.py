@@ -1,28 +1,22 @@
 import moderngl as mgl
 import pygame as pg
+from PIL import Image
 
 from i_unit import IUnit
 
 class Texture(IUnit):
-    def __init__(self, ctx: mgl.Context, path: str):
-        surface = pg.image.load(path).convert_alpha()
+    def __init__(self, ctx: mgl.Context, path: str, filter: int):
+        img = Image.open(path).convert('RGBA')
+        img = img.transpose(Image.FLIP_TOP_BOTTOM)
 
-        surface = pg.transform.flip(surface, False, True)
-
-        self.width = surface.get_width()
-        self.height = surface.get_height()
-
-        data = pg.image.tobytes(surface, "RGBA")
-
-        # Create GPU texture
         self.texture = ctx.texture(
-            (self.width, self.height),
-            4,
-            data
+            size=img.size, 
+            components=4,
+            data=img.tobytes()
         )
 
         # Common defaults
-        self.texture.filter = (mgl.LINEAR, mgl.LINEAR)
+        self.texture.filter = (filter, filter)
         self.texture.repeat_x = False
         self.texture.repeat_y = False
 
