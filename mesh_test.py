@@ -2,9 +2,17 @@ import pygame
 import moderngl as mgl
 from vertex import Vertex
 from mesh import Mesh
+import sys
 
 def main():
     pygame.init()
+
+    if sys.platform == "darwin":
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
+        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+
     pygame.display.set_mode((800, 600), pygame.OPENGL | pygame.DOUBLEBUF)
     ctx = mgl.create_context()
 
