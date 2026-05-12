@@ -1,8 +1,9 @@
 import pygame as pg
 import moderngl as mgl
+import sys
 
-from mesh import Mesh
-from vertex import Vertex
+from src.graphics.mesh import Mesh
+from src.graphics.vertex import Vertex
 
 
 VERTEX_SHADER = """
@@ -59,6 +60,12 @@ void main() {
 def main():
 
     pg.init()
+
+    if sys.platform == "darwin":
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
     pg.display.set_mode(
         (800, 600),

@@ -1,10 +1,10 @@
-import pygame
+import pygame as pg
 import moderngl as mgl
 import sys
 
-from vertex import Vertex
-from mesh import Mesh
-from texture import Texture
+from src.graphics.vertex import Vertex
+from src.graphics.mesh import Mesh
+from src.graphics.texture import Texture
 
 
 VERTEX_SHADER = """
@@ -37,18 +37,18 @@ void main() {
 
 
 def main():
-    # Init pygame + OpenGL context
-    pygame.init()
+    # Init pg + OpenGL context
+    pg.init()
 
     if sys.platform == "darwin":
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
-    pygame.display.set_mode(
+    pg.display.set_mode(
         (800, 600),
-        pygame.OPENGL | pygame.DOUBLEBUF
+        pg.OPENGL | pg.DOUBLEBUF
     )
 
     # Create ModernGL context
@@ -113,19 +113,19 @@ def main():
     # Load texture
     texture = Texture(
         ctx,
-        "test_1.png",  # put an image next to this script
+        "resources/test-resources/test_1.png",  # put an image next to this script
         filter=mgl.NEAREST
     )
 
     # Bind texture uniform
     program["tex"] = 0
 
-    clock = pygame.time.Clock()
+    clock = pg.time.Clock()
     running = True
 
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
                 running = False
 
         # Clear screen
@@ -138,7 +138,7 @@ def main():
         mesh.render()
 
         # Swap buffers
-        pygame.display.flip()
+        pg.display.flip()
 
         clock.tick(60)
 
@@ -146,7 +146,7 @@ def main():
     mesh.release()
     texture.release()
 
-    pygame.quit()
+    pg.quit()
 
 
 if __name__ == "__main__":

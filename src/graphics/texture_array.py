@@ -1,7 +1,7 @@
 import moderngl as mgl
 from PIL import Image
 
-from i_unit import IUnit
+from src.unit.i_unit import IUnit
 
 
 class TextureArray(IUnit):

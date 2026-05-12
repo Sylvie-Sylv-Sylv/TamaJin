@@ -1,9 +1,10 @@
 import moderngl as mgl
 import pygame as pg
+import sys
 
-from texture_array import TextureArray
-from vertex import Vertex
-from mesh import Mesh
+from src.graphics.texture_array import TextureArray
+from src.graphics.vertex import Vertex
+from src.graphics.mesh import Mesh
 
 
 VERTEX_SHADER = """
@@ -43,6 +44,12 @@ void main() {
 def main():
     pg.init()
 
+    if sys.platform == "darwin":
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+
     pg.display.set_mode(
         (800, 600),
         pg.OPENGL | pg.DOUBLEBUF
@@ -62,8 +69,8 @@ def main():
     tex_array = TextureArray(
         ctx,
         {
-            "test_1": "test_1.png",
-            "test_2": "test_2.png"
+            "test_1": "resources/test-resources/test_1.png",
+            "test_2": "resources/test-resources/test_2.png"
         },
         mgl.NEAREST
     )

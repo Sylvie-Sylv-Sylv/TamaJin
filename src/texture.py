@@ -1,8 +1,7 @@
 import moderngl as mgl
-import pygame as pg
 from PIL import Image
 
-from i_unit import IUnit
+from src.unit.i_unit import IUnit
 
 class Texture(IUnit):
     def __init__(self, ctx: mgl.Context, path: str, filter: int):

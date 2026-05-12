@@ -1,6 +1,6 @@
 import moderngl as mgl
 
-from i_unit import IUnit
+from src.unit.i_unit import IUnit
 
 
 class Mesh(IUnit):

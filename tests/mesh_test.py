@@ -1,20 +1,20 @@
-import pygame
+import pygame as pg
 import moderngl as mgl
 import sys
-from vertex import Vertex
-from mesh import Mesh
+from src.graphics.vertex import Vertex
+from src.graphics.mesh import Mesh
 
 
 def main():
-    pygame.init()
+    pg.init()
 
     if sys.platform == "darwin":
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
-        pygame.display.gl_set_attribute(pygame.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
-    pygame.display.set_mode((800, 600), pygame.OPENGL | pygame.DOUBLEBUF)
+    pg.display.set_mode((800, 600), pg.OPENGL | pg.DOUBLEBUF)
     ctx = mgl.create_context()
 
     prog = ctx.program(
@@ -46,21 +46,21 @@ def main():
 
     mesh = Mesh(ctx, vertices, prog)
 
-    clock = pygame.time.Clock()
+    clock = pg.time.Clock()
     running = True
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
                 running = False
 
         ctx.clear(0.1, 0.1, 0.1)
 
         mesh.render()
 
-        pygame.display.flip()
+        pg.display.flip()
         clock.tick(60)
 
-    pygame.quit()
+    pg.quit()
 
 if __name__ == "__main__":
     main()

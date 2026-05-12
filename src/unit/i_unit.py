@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-        from unit_holder import UnitHolder
+        from src.unit.unit_holder import UnitHolder
 
 class IUnit(ABC):
         @abstractmethod
