@@ -92,6 +92,15 @@ class AddNode(Node):
         return f"{self.type} {self.id} = {a.glsl()} + {b.glsl()};"
 
 
+class SubNode(Node):
+    def __init__(self, a, b):
+        super().__init__(a.type, [a, b])
+
+    def emit(self):
+        a, b = self.inputs
+        return f"{self.type} {self.id} = {a.glsl()} - {b.glsl()};"
+
+
 class MulNode(Node):
     def __init__(self, a, b):
         super().__init__(a.type, [a, b])
@@ -99,6 +108,15 @@ class MulNode(Node):
     def emit(self):
         a, b = self.inputs
         return f"{self.type} {self.id} = {a.glsl()} * {b.glsl()};"
+
+
+class DivNode(Node):
+    def __init__(self, a, b):
+        super().__init__(a.type, [a, b])
+
+    def emit(self):
+        a, b = self.inputs
+        return f"{self.type} {self.id} = {a.glsl()} / {b.glsl()};"
 
 
 class SetNode(Node):
