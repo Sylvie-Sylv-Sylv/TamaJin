@@ -6,5 +6,5 @@ class NormalizeNode(Node):
 
     def emit(self):
         a = self.inputs[0]
-        return f"{self.type} {self.id} = normalize({a.glsl()});"
+        return f"{self.type.value} {self.id} = normalize({a.glsl()});"
     

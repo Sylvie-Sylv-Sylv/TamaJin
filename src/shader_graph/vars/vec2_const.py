@@ -1,11 +1,12 @@
 from src.shader_graph.vars.var import Var
+from src.shader_graph.vars.var_type import VarType
 
 class Vec2Const(Var):
     def __init__(self, x, y):
-        super().__init__("vec2")
+        super().__init__(VarType.VEC2)
         self.x = x
         self.y = y
 
-    def glsl(self):
+    def emit_object(self):
         return f"vec2({self.x}, {self.y})"
     

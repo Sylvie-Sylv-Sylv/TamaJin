@@ -6,5 +6,5 @@ class AddNode(Node):
 
     def emit(self):
         a, b = self.inputs
-        return f"{self.type} {self.id} = {a.glsl()} + {b.glsl()};"
+        return f"{self.type.value} {self.id} = {a.emit_object()} + {b.emit_object()};"
     

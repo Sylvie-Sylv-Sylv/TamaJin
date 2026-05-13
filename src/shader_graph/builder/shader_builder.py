@@ -56,13 +56,13 @@ class ShaderBuilder:
 
         # emit in vars
         for var in self.in_vars:
-            shader += f"in {var.type} {var.name};\n"
+            shader += f"in {var.type.value} {var.name};\n"
 
         shader += "\n"
 
         # emit out vars
         for var in self.out_vars:
-            shader += f"out {var.type} {var.name};\n"
+            shader += f"out {var.type.value} {var.name};\n"
 
         shader += "\n"
 

@@ -6,5 +6,5 @@ class DotNode(Node):
 
     def emit(self):
         a, b = self.inputs
-        return f"{self.type} {self.id} = dot({a.glsl()}, {b.glsl()});"
+        return f"{self.type.value} {self.id} = dot({a.glsl()}, {b.glsl()});"
     

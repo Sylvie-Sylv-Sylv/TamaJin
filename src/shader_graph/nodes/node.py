@@ -15,6 +15,6 @@ class Node(Var):
     def emit(self):
         raise NotImplementedError()
 
-    def glsl(self):
+    def emit_object(self):
         return self.id
     
