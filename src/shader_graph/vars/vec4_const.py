@@ -1,4 +1,4 @@
-from shader_graph.vars.var import Var
+from src.shader_graph.vars.var import Var
 
 class Vec4Const(Var):
     def __init__(self, x, y, z, w):

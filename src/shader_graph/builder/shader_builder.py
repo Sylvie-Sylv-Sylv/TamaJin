@@ -1,5 +1,5 @@
-from shader_graph.vars.defined_var import DefinedVar
-from shader_graph.nodes.node import Node
+from src.shader_graph.vars.defined_var import DefinedVar
+from src.shader_graph.nodes.node import Node
 
 # ------------------------
 # Graph buldar

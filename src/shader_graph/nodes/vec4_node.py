@@ -1,4 +1,4 @@
-from shader_graph.nodes.node import Node
+from src.shader_graph.nodes.node import Node
 
 class Vec4Node(Node):
     def __init__(self, *args):
