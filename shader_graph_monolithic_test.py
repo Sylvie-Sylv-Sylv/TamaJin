@@ -21,6 +21,18 @@ class DefinedVar(Var):
         return self.name
 
 
+class Vec3Const(Var):
+    def __init__(self, x, y, z):
+        super().__init__("vec3")
+
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def glsl(self):
+        return f"vec3({self.x}, {self.y}, {self.z})"
+
+
 class Vec2Const(Var):
     def __init__(self, x, y):
         super().__init__("vec2")
@@ -29,6 +41,28 @@ class Vec2Const(Var):
 
     def glsl(self):
         return f"vec2({self.x}, {self.y})"
+
+class Vec4Const(Var):
+    def __init__(self, x, y, z, w):
+        super().__init__("vec4")
+
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+
+    def glsl(self):
+        return f"vec4({self.x}, {self.y}, {self.z}, {self.w})"
+
+
+class FloatConst(Var):
+    def __init__(self, value):
+        super().__init__("float")
+
+        self.value = value
+
+    def glsl(self):
+        return str(self.value)
 
 
 # ------------------------
@@ -67,7 +101,7 @@ class MulNode(Node):
         return f"{self.type} {self.id} = {a.glsl()} * {b.glsl()};"
 
 
-class SetOutNode(Node):
+class SetNode(Node):
     def __init__(self, out_var, value):
         super().__init__("void", [value])
 
@@ -80,6 +114,14 @@ class SetOutNode(Node):
     def glsl(self):
         return ""
 
+class Vec4Node(Node):
+    def __init__(self, *args):
+        super().__init__("vec4", list(args))
+
+    def emit(self):
+        args_glsl = ", ".join(arg.glsl() for arg in self.inputs)
+
+        return f"vec4 {self.id} = vec4({args_glsl});"
 
 # ------------------------
 # Graph buldar
@@ -131,7 +173,7 @@ class ShaderBuilder:
     # build segstem
     # ------------------------
 
-    def build_vertex(self, output_node, extra_nodes=[]):
+    def build(self, ends = []):
         shader = "#version 330\n\n"
 
         # emit in vars
@@ -149,19 +191,13 @@ class ShaderBuilder:
         shader += "void main() {\n"
 
         # build all additional nodes
-        for node in extra_nodes:
+        for node in ends:
             self.dfs(node)
-
-        # build final position node
-        self.dfs(output_node)
 
         shader += "\n".join(self.lines)
         shader += "\n"
 
-        shader += f"""
-    gl_Position = vec4({output_node.glsl()}, 0.0, 1.0);
-}}
-"""
+        shader += "}"
 
         return shader
 
@@ -186,18 +222,46 @@ mul = MulNode(add, Vec2Const(2.0, 2.0))
 add2 = AddNode(add, mul)
 
 # set fragment output
-set_color = SetOutNode(v_color, color)
+set_color = SetNode(v_color, color)
 
-# final output node
-final = add2
+set_position = SetNode(DefinedVar("vec4", "gl_Position"), Vec4Node(add2, FloatConst(0.0), FloatConst(1.0), FloatConst(1.0)))
 
 # ------------------------
 # Buld
 # ------------------------
 
-vertex_shader = builder.build_vertex(
-    final,
-    extra_nodes=[set_color]
+vertex_shader = builder.build(
+    ends = [set_color, set_position]
 )
 
 print(vertex_shader)
+
+# ------------------------
+# Fragment Loliconstructor
+# ------------------------
+
+fragment_builder = ShaderBuilder()
+
+v_color = fragment_builder.add_in("vec3", "v_color")
+
+f_color = fragment_builder.add_out("vec4", "f_color")
+
+add = AddNode(v_color, Vec3Const(0.1, 0.1, 0.1))
+
+# vec4(v_color, 1.0)
+final_color = Vec4Node(
+    add,
+    FloatConst(1.0)
+)
+
+set_frag = SetNode(f_color, final_color)
+
+# ------------------------
+# Buld
+# ------------------------
+
+fragment_shader = fragment_builder.build(
+    ends=[set_frag]
+)
+
+print(fragment_shader)
