@@ -11,12 +11,8 @@ color = builder.add_in(VarType.VEC3, "color")
 
 v_color = builder.add_out(VarType.VEC3, "v_color")
 
-offset = Vec2Const(0.5, 0.5)
-
-add = AddNode(position, offset)
-
+add = AddNode(position, Vec2Const(0.5, 0.5))
 mul = MulNode(add, Vec2Const(2.0, 2.0))
-
 add2 = AddNode(add, mul)
 
 # set fragment output
@@ -28,9 +24,8 @@ set_position = SetNode(DefinedVar(VarType.VEC4, "gl_Position"), VecNode(add2, Fl
 # Buld
 # ------------------------
 
-vertex_shader = builder.build(
-    ends = [set_color, set_position]
-)
+builder.set_ends([set_color, set_position])
+vertex_shader = builder.build()
 
 print(vertex_shader)
 
@@ -58,8 +53,7 @@ set_frag = SetNode(f_color, final_color)
 # Buld
 # ------------------------
 
-fragment_shader = fragment_builder.build(
-    ends=[set_frag]
-)
+fragment_builder.set_ends([set_frag])
+fragment_shader = fragment_builder.build()
 
 print(fragment_shader)

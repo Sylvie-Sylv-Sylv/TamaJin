@@ -16,3 +16,6 @@ from src.shader_graph.nodes.vec_node import VecNode
 
 # Builder
 from src.shader_graph.builder.shader_builder import ShaderBuilder
+
+# Program
+from src.shader_graph.program.program import Program

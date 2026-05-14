@@ -9,14 +9,15 @@ class ShaderBuilder:
     def __init__(self):
         self.visited = set()
         self.lines = []
+        
+        self.ends = []
 
         self.in_vars = []
         self.out_vars = []
 
-    # ------------------------
-    # in/out segstem
-    # ------------------------
-
+    def set_ends(self, ends = []):
+        self.ends = ends
+        
     def add_in(self, type, name):
         var = DefinedVar(type, name)
         self.in_vars.append(var)
@@ -51,7 +52,7 @@ class ShaderBuilder:
     # build segstem
     # ------------------------
 
-    def build(self, ends = []):
+    def build(self):
         shader = "#version 330\n\n"
 
         # emit in vars
@@ -69,7 +70,7 @@ class ShaderBuilder:
         shader += "void main() {\n"
 
         # build all additional nodes
-        for node in ends:
+        for node in self.ends:
             self.dfs(node)
 
         shader += "\n".join(self.lines)
