@@ -1,4 +1,4 @@
-from shader_graph.vars.var import Var
+from src.shader_graph.vars.var import Var
 import uuid
 
 # ------------------------
@@ -15,6 +15,6 @@ class Node(Var):
     def emit(self):
         raise NotImplementedError()
 
-    def glsl(self):
+    def emit_object(self):
         return self.id
     

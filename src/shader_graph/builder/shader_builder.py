@@ -1,5 +1,5 @@
-from shader_graph.vars.defined_var import DefinedVar
-from shader_graph.nodes.node import Node
+from src.shader_graph.vars.defined_var import DefinedVar
+from src.shader_graph.nodes.node import Node
 
 # ------------------------
 # Graph buldar
@@ -56,13 +56,13 @@ class ShaderBuilder:
 
         # emit in vars
         for var in self.in_vars:
-            shader += f"in {var.type} {var.name};\n"
+            shader += f"in {var.type.value} {var.name};\n"
 
         shader += "\n"
 
         # emit out vars
         for var in self.out_vars:
-            shader += f"out {var.type} {var.name};\n"
+            shader += f"out {var.type.value} {var.name};\n"
 
         shader += "\n"
 
