@@ -9,7 +9,7 @@ class Mesh(IUnit):
         ctx: mgl.Context,
         vertices: list,
         program: mgl.Program,
-        render_mode=mgl.TRIANGLES
+        render_mode = mgl.TRIANGLES
     ):
         """
         :param vertices:

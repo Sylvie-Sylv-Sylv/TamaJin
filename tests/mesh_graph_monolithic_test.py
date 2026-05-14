@@ -1,4 +1,4 @@
-from src.shader_graph import *
+from src.graphics.shader_graph import *
 
 # ------------------------
 # Graph Loliconstructor

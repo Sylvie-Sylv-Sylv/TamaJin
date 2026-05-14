@@ -1,10 +1,8 @@
 import moderngl as mgl
 from PIL import Image
 
-from src.unit.i_unit import IUnit
 
-
-class TextureArray(IUnit):
+class TextureArray():
     def __init__(
         self,
         ctx: mgl.Context,

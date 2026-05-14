@@ -4,7 +4,7 @@ import sys
 
 from src.graphics.vertex import Vertex
 from src.graphics.mesh import Mesh
-from src.shader_graph import *
+from src.graphics.shader_graph import *
 
 def main():
         pg.init()

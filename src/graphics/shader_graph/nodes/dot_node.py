@@ -1,4 +1,4 @@
-from src.shader_graph.nodes.node import Node
+from src.graphics.shader_graph.nodes.node import Node
 
 class DotNode(Node):
     def __init__(self, a, b, result_type = "float"):

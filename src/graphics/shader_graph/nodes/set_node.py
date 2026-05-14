@@ -1,5 +1,5 @@
-from src.shader_graph.nodes.node import Node
-from src.shader_graph.vars.var_type import VarType
+from src.graphics.shader_graph.nodes.node import Node
+from src.graphics.shader_graph.vars.var_type import VarType
 
 class SetNode(Node):
     def __init__(self, out_var, value):

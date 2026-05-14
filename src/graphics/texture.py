@@ -1,9 +1,7 @@
 import moderngl as mgl
 from PIL import Image
 
-from src.unit.i_unit import IUnit
-
-class Texture(IUnit):
+class Texture:
     def __init__(self, ctx: mgl.Context, path: str, filter: int):
         img = Image.open(path).convert('RGBA')
         img = img.transpose(Image.FLIP_TOP_BOTTOM)
