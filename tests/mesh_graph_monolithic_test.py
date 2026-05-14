@@ -1,4 +1,4 @@
-from shader_graph import *
+from src.shader_graph import *
 
 # ------------------------
 # Graph Loliconstructor
@@ -6,12 +6,12 @@ from shader_graph import *
 
 builder = ShaderBuilder()
 
-position = builder.add_in("vec2", "in_vert")
-color = builder.add_in("vec3", "in_color")
+position = builder.add_in(VarType.VEC2, "in_vert")
+color = builder.add_in(VarType.VEC3, "in_color")
 
-v_color = builder.add_out("vec3", "v_color")
+v_color = builder.add_out(VarType.VEC3, "v_color")
 
-set_position = SetNode(DefinedVar("vec4", "gl_Position"), Vec4Node(position, FloatConst(0.0), FloatConst(1.0)))
+set_position = SetNode(DefinedVar(VarType.VEC4, "gl_Position"), VecNode(position, FloatConst(0.0), FloatConst(1.0)))
 
 set_color = SetNode(v_color, color)
 # ------------------------
@@ -30,11 +30,11 @@ print(vertex_shader)
 
 fragment_builder = ShaderBuilder()
 
-v_color = fragment_builder.add_in("vec3", "v_color")
+v_color = fragment_builder.add_in(VarType.VEC3, "v_color")
 
-f_color = fragment_builder.add_out("vec4", "f_color")
+f_color = fragment_builder.add_out(VarType.VEC4, "f_color")
 
-set_frag = SetNode(DefinedVar("vec4", "f_color"), Vec4Node(v_color, FloatConst(1.0)))
+set_frag = SetNode(DefinedVar(VarType.VEC4, "f_color"), VecNode(v_color, FloatConst(1.0)))
 
 # ------------------------
 # Buld
