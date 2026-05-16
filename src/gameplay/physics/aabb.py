@@ -118,12 +118,12 @@ class AABB:
                         self.height + amount.y * 2
                 )
         
-        def pg_render(self, surface: pygame.Surface, color = (255, 0, 0), width = 1):
+        def pg_render(self, surface: pygame.Surface, color = (255, 0, 0), **kwargs):
                 pygame.draw.rect(
                         surface,
                         color,
                         pygame.Rect(self.x, self.y, self.width, self.height),
-                        width
+                        **kwargs
                 )
 
         # ------------------------

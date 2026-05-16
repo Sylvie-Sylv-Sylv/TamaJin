@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from gameplay.scene import Scene
+from gameplay.scenes.scene import Scene
 
 class System:
         @staticmethod

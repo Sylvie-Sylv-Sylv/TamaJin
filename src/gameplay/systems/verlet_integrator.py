@@ -1,6 +1,6 @@
 from gameplay.systems.system import System
 
-from gameplay.scene import Scene
+from gameplay.scenes.scene import Scene
 
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity

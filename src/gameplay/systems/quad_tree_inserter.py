@@ -1,6 +1,6 @@
 from gameplay.physics.aabb import AABB
 from gameplay.physics.position import Position
-from gameplay.scene import Scene
+from gameplay.scenes.scene import Scene
 from gameplay.systems.system import System
 
 class QuadTreeInserter(System):

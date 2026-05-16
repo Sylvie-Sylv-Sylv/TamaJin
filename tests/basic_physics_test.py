@@ -1,68 +1,56 @@
-import pygame as pg
+import pygame as pygame
+import math
 
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
 from gameplay.physics.force import Force
 from gameplay.physics.mass import Mass
-from gameplay.scene import Scene
+from gameplay.scenes.physic_scene import PhysicScene
 from gameplay.systems.verlet_integrator import VerletIntegrator
 from gameplay.systems.quad_tree_inserter import QuadTreeInserter
 from gameplay.runtime.quad_tree import QuadTree
 from gameplay.physics.aabb import AABB
-
-class TestScene(Scene):
-        def __init__(self):
-                super().__init__("test_scene")
-                
-                self.tree = QuadTree(AABB(0, 0, 800, 800))
-                
-                self.register_component(Position)
-                self.register_component(Velocity)
-                self.register_component(Force)
-                self.register_component(Mass)
-                self.register_component(AABB)
         
-        def step(self):
-                VerletIntegrator.step(self, dt = 1.0)
-                self.tree.clear()
-                QuadTreeInserter.step(self)
-                
 
 def main():
-        pg.init()
+        pygame.init()
 
-        window = pg.display.set_mode((800, 600))
+        window = pygame.display.set_mode((800, 600))
         
-        scene = TestScene()
+        scene = PhysicScene()
         
-        scene.add_entity("entity_1", Position(100, 100), Velocity(5, -5), Force(0, 0.3), Mass(1.0), AABB(-16, -16, 32, 32))
-        scene.add_entity("entity_2", Position(100, 500), Velocity(5, 5), Force(0, -0.3), Mass(1.0), AABB(-16, -16, 32, 32))
+        scene.add_entity("entity_1", Position(100, 100), Velocity(0, 0), Force(0, 0.0), Mass(1.0), AABB(-32, -32, 64, 64))
+        scene.add_entity("entity_2", Position(100, 100), Velocity(0, 0), Force(0, 0.0), Mass(1.0), AABB(-32, -32, 64, 64))
         
-        clock = pg.time.Clock()
+        clock = pygame.time.Clock()
         running = True
         while running:
-                for event in pg.event.get():
-                        if event.type == pg.QUIT:
+                for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
                                 running = False
 
                 scene.step()
                 
+                if position := scene.fetch("entity_2", Position):
+                        position.x  = -math.cos(pygame.time.get_ticks() / 1000.0) * 300 + 100 + 300
+                
                 window.fill((0, 0, 0))
+                
+                scene.tree.pg_render(window,  width = 1)
                 
                 if aabb := scene.fetch("entity_1", AABB):
                         if position := scene.fetch("entity_1", Position):
-                                aabb.move(position).pg_render(window)
+                                aabb.move(position).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
                 
                 if aabb := scene.fetch("entity_2", AABB):
                         if position := scene.fetch("entity_2", Position):
-                                aabb.move(position).pg_render(window)
-                
-                scene.tree.pg_render(window,  width = 1)
+                                print("entity_2 position:", position)
+                                aabb.move(position).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
-                pg.display.flip()
+                pygame.display.flip()
                 clock.tick(60)
 
-        pg.quit()
+        pygame.quit()
 
 if __name__ == "__main__":
         main()
