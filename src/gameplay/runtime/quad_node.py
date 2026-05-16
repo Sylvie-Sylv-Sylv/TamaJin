@@ -1,7 +1,9 @@
+import pygame
+
 from gameplay.physics.aabb import AABB
 
 class QuadNode:
-        MAX_OBJECTS = 4
+        MAX_OBJECTS = 1
         MAX_DEPTH = 6
 
         def __init__(
@@ -123,3 +125,30 @@ class QuadNode:
                                 child.query(area, found)
 
                 return found
+        
+        def pg_render(
+                self,
+                surface: pygame.Surface,
+                width: int = 1
+        ):
+                color = (
+                        min(255, self.depth * 40),
+                        255 - min(255, self.depth * 30),
+                        255
+                )
+
+                pygame.draw.rect(
+                        surface,
+                        color,
+                        (
+                                self.bounds.x,
+                                self.bounds.y,
+                                self.bounds.width,
+                                self.bounds.height
+                        ),
+                        width
+                )
+
+                if self.children is not None:
+                        for child in self.children:
+                                child.pg_render(surface, width)

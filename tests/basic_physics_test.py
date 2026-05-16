@@ -1,4 +1,4 @@
-from sklearn import tree
+import pygame as pg
 
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
@@ -14,7 +14,7 @@ class TestScene(Scene):
         def __init__(self):
                 super().__init__("test_scene")
                 
-                self.tree = QuadTree(AABB(0, 0, 100, 100))
+                self.tree = QuadTree(AABB(0, 0, 800, 800))
                 
                 self.register_component(Position)
                 self.register_component(Velocity)
@@ -24,21 +24,45 @@ class TestScene(Scene):
         
         def step(self):
                 VerletIntegrator.step(self, dt = 1.0)
+                self.tree.clear()
                 QuadTreeInserter.step(self)
+                
 
 def main():
+        pg.init()
+
+        window = pg.display.set_mode((800, 600))
+        
         scene = TestScene()
         
-        scene.add_entity("entity_1", Position(0, 0), Velocity(1, 0), Force(1, 0), Mass(1.0), AABB(100, 100, 23, 32))
+        scene.add_entity("entity_1", Position(100, 100), Velocity(5, -5), Force(0, 0.3), Mass(1.0), AABB(-16, -16, 32, 32))
+        scene.add_entity("entity_2", Position(100, 500), Velocity(5, 5), Force(0, -0.3), Mass(1.0), AABB(-16, -16, 32, 32))
         
-        scene.step()
+        clock = pg.time.Clock()
+        running = True
+        while running:
+                for event in pg.event.get():
+                        if event.type == pg.QUIT:
+                                running = False
 
-        print(scene.tree.query( AABB(90, 90, 100, 100)))
-        
-        print(f"Position: {scene.components[Position].get('entity_1', None)}")
-        print(f"Velocity: {scene.components[Velocity].get('entity_1', None)}")
-        print(f"Force: {scene.components[Force].get('entity_1', None)}")
-        print(f"Mass: {scene.components[Mass].get('entity_1', None).value}")
+                scene.step()
+                
+                window.fill((0, 0, 0))
+                
+                if aabb := scene.fetch("entity_1", AABB):
+                        if position := scene.fetch("entity_1", Position):
+                                aabb.move(position).pg_render(window)
+                
+                if aabb := scene.fetch("entity_2", AABB):
+                        if position := scene.fetch("entity_2", Position):
+                                aabb.move(position).pg_render(window)
+                
+                scene.tree.pg_render(window,  width = 1)
+
+                pg.display.flip()
+                clock.tick(60)
+
+        pg.quit()
 
 if __name__ == "__main__":
         main()

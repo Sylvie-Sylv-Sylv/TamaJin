@@ -1,6 +1,9 @@
 from abc import abstractmethod
+from typing import TypeVar, overload
 
 from gameplay.general.vector2d import Vector2D
+
+T = TypeVar("T")
 
 class Scene:
         def __init__(self, name):
@@ -37,6 +40,13 @@ class Scene:
 
                 for storage in self.components.values():
                         storage.pop(entity_id, None)
+
+        def fetch(
+                self,
+                entity_id: str,
+                component_type: type[T]
+        ) -> T | None:
+                return self.components.get(component_type, {}).get(entity_id, None)
 
         def query(self, *component_types):
                 component_maps = [
