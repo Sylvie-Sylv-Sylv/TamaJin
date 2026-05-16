@@ -20,5 +20,5 @@ class VerletSecond(System):
                         # integrate velocity
                         velocity += 0.5 * (a_old + a_new) * dt
                         
-                        new_force.x = old_force.x
-                        new_force.y = old_force.y
+                        old_force.x = new_force.x
+                        old_force.y = new_force.y
