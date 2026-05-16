@@ -1,0 +1,104 @@
+import pygame as pygame
+import time
+import random
+
+from gameplay.general.vector2d import Vector2D
+from gameplay.physics.aabb import AABB
+from gameplay.physics.mass import Mass
+from gameplay.physics.new_force import NewForce
+from gameplay.physics.old_force import OldForce
+from gameplay.physics.position import Position
+from gameplay.physics.polygon import Polygon
+from gameplay.physics.velocity import Velocity
+from gameplay.scenes.physic_scene import PhysicScene
+
+
+def _make_square(size: float) -> list[Vector2D]:
+    # local-space square centered at origin
+    c = 30
+    s = size / 2.0
+    return [
+        Vector2D(-s + random.uniform(-c, c), -s + random.uniform(-c, c)),
+        Vector2D(s + random.uniform(-c, c), -s + random.uniform(-c, c)),
+        Vector2D(s + random.uniform(-c, c), s + random.uniform(-c, c)),
+        Vector2D(-s + random.uniform(-c, c), s + random.uniform(-c, c)),
+    ]
+
+
+def main():
+    pygame.init()
+
+    window = pygame.display.set_mode((800, 600))
+    clock = pygame.time.Clock()
+
+    scene = PhysicScene()
+
+    # Two overlapping polygons (same size, slightly offset)
+    poly_a = Polygon(_make_square(120))
+    poly_b = Polygon(_make_square(120))
+
+    # The scene's broad phase uses AABB components, so we give matching AABBs.
+    # Note: Polygon vertices are local space; PhysicScene's renderer doesn't transform.
+    # Collision SAT uses local vertices too, so we offset via Position and MTV only.
+    scene.add_entity(
+        "poly_a",
+        Position(200, 250),
+        Velocity(0, 0),
+        OldForce(0, 0),
+        NewForce(0, 0),
+        Mass(1.0),
+        poly_a.compute_aabb(),
+        poly_a,
+    )
+    scene.add_entity(
+        "poly_b",
+        Position(300, 250),
+        Velocity(0, 0),
+        OldForce(0, 0),
+        NewForce(0, 0),
+        Mass(1.0),
+        poly_b.compute_aabb(),
+        poly_b,
+    )
+
+    # Allow initial overlap to be visible.
+    window.fill((0, 0, 0))
+    for entity_id in ("poly_a", "poly_b"):
+            if polygon := scene.fetch(entity_id, Polygon):
+                if position := scene.fetch(entity_id, Position):
+                    color = (255, 0, 0) if ("poly_a", "poly_b") in scene.narrow_collision_pairs or (
+                        "poly_b", "poly_a"
+                    ) in scene.broad_collision_pairs else (255, 255, 255)
+                    polygon.move(position).pg_render(window, color)
+    pygame.display.flip()
+    time.sleep(1.0)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        scene.step()
+
+        window.fill((0, 0, 0))
+        scene.tree.pg_render(window, width=1)
+
+        # Render AABBs (broad phase visualization)
+        for entity_id in ("poly_a", "poly_b"):
+            if polygon := scene.fetch(entity_id, Polygon):
+                if position := scene.fetch(entity_id, Position):
+                    color = (255, 0, 0) if ("poly_a", "poly_b") in scene.narrow_collision_pairs or (
+                        "poly_b", "poly_a"
+                    ) in scene.broad_collision_pairs else (255, 255, 255)
+                    polygon.move(position).pg_render(window, color)
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
+
