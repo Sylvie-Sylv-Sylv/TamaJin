@@ -82,7 +82,7 @@ def main():
                         moved_a.pg_render(window, (255, 255, 255))
                         moved_b.pg_render(window, (255, 255, 255))
                         
-                        contact_points = moved_a.contact_points(moved_b, scene.narrow_collision_mtv[("poly_a", "poly_b")])
+                        contact_points = scene.narrow_collision_contacts.get(("poly_a", "poly_b"), [])
                         
                         for point in contact_points:
                                 pygame.draw.circle(window, (0, 255, 0), point.to_tuple(), radius = 2)

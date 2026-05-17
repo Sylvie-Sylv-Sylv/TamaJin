@@ -24,6 +24,7 @@ class PhysicScene(Scene):
                 self.broad_collision_pairs: set[tuple[str, str]] = set()
                 self.narrow_collision_pairs: set[tuple[str, str]] = set() # (entity_a, entity_b)
                 self.narrow_collision_mtv: dict[tuple[str, str], Vector2D] = {} # (entity_a, entity_b) -> MTV vector
+                self.narrow_collision_contacts: dict[tuple[str, str], list[Vector2D]] = {} # (entity_a, entity_b) -> list of contact points
                 
                 self.register_component(Position)
                 self.register_component(Velocity)

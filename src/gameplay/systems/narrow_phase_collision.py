@@ -17,6 +17,9 @@ class NarrowPhaseCollision(System):
                            and (polygon_b := scene.fetch(entity_b, Polygon)) \
                            and (position_a := scene.fetch(entity_a, Position)) \
                            and (position_b := scene.fetch(entity_b, Position)):
+                                moved_a = polygon_a.move(position_a)
+                                moved_b = polygon_b.move(position_b)
+                                   
                                 if results := polygon_a.move(position_a).sat(polygon_b.move(position_b)):
                                         is_colliding = results[0]
                                         mtv = results[1]
@@ -30,3 +33,8 @@ class NarrowPhaseCollision(System):
                                         if is_colliding and pair not in scene.narrow_collision_pairs:
                                                 scene.narrow_collision_pairs.add(pair)
                                                 scene.narrow_collision_mtv[pair] = mtv
+                                                
+                                                sep_a = moved_a.move(mtv * 0.5 * 0.999)
+                                                sep_b = moved_b.move(-mtv * 0.5 * 0.999)
+                                                
+                                                scene.narrow_collision_contacts[pair] = sep_a.contact_points(sep_b, mtv)
