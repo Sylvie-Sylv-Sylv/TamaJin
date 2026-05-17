@@ -9,7 +9,7 @@ from gameplay.physics.velocity import Velocity
 from gameplay.runtime.quad_tree import QuadTree
 from gameplay.scenes.scene import Scene
 from gameplay.systems.broad_phase_collision import BroadPhaseCollision
-from gameplay.systems.collision_solver_first import CollisionSolverFirst
+from gameplay.systems.collision_solver_pos import CollisionSolverPos
 from gameplay.systems.narrow_phase_collision import NarrowPhaseCollision
 from gameplay.systems.quad_tree_inserter import QuadTreeInserter
 from gameplay.systems.runtime_reset import RuntimeReset
@@ -34,11 +34,11 @@ class PhysicScene(Scene):
                 self.register_component(Polygon)
         
         def step(self, dt: float = 1.0):
+                RuntimeReset.step(self)
                 VerletFirst.step(self, dt = dt)
                 self.tree.clear()
                 QuadTreeInserter.step(self)
                 BroadPhaseCollision.step(self)
                 NarrowPhaseCollision.step(self)
-                CollisionSolverFirst.step(self, dt = dt)
+                CollisionSolverPos.step(self, dt = dt)
                 VerletSecond.step(self, dt = dt)
-                RuntimeReset.step(self)
