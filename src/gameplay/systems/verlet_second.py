@@ -13,9 +13,9 @@ class VerletSecond(System):
         def step(scene : Scene, dt : float):
                 for entity, velocity, old_force, new_force, mass in scene.query(Velocity, OldForce, NewForce, Mass):
                         # old acceleration
-                        a_old = old_force / mass.value
+                        a_old = old_force / mass.val
                         # compute new acceleration
-                        a_new = new_force / mass.value
+                        a_new = new_force / mass.val
                         
                         # integrate velocity
                         velocity += 0.5 * (a_old + a_new) * dt

@@ -1,10 +1,12 @@
 from gameplay.general.vector2d import Vector2D
 from gameplay.physics.aabb import AABB
+from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.new_force import NewForce
 from gameplay.physics.old_force import OldForce
 from gameplay.physics.mass import Mass
 from gameplay.physics.polygon import Polygon
 from gameplay.physics.position import Position
+from gameplay.physics.rotation import Rotation
 from gameplay.physics.velocity import Velocity
 from gameplay.runtime.quad_tree import QuadTree
 from gameplay.scenes.scene import Scene
@@ -30,6 +32,8 @@ class PhysicScene(Scene):
                 self.register_component(Velocity)
                 self.register_component(OldForce)
                 self.register_component(NewForce)
+                self.register_component(Rotation)
+                self.register_component(AngularVelocity)
                 self.register_component(Mass)
                 self.register_component(AABB)
                 self.register_component(Polygon)
