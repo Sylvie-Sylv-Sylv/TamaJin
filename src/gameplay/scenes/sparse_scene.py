@@ -2,10 +2,11 @@ from abc import abstractmethod
 from typing import TypeVar, overload
 
 from gameplay.general.vector2d import Vector2D
+from gameplay.scenes.scene import Scene
 
 T = TypeVar("T")
 
-class SparseScene:
+class SparseScene(Scene):
         def __init__(self, name):
                 self.name = name
                 
@@ -66,11 +67,7 @@ class SparseScene:
                                 yield (
                                         entity,
                                         *[
-                                        storage[entity]
-                                        for storage in component_maps
+                                                storage[entity]
+                                                for storage in component_maps
                                         ]
                                 )
-
-        @abstractmethod
-        def step():
-                raise NotImplementedError("Scene step method is not implemented yet.")
