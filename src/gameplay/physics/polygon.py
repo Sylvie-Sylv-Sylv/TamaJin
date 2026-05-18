@@ -11,19 +11,72 @@ from gameplay.physics.shape import Shape
 class Polygon(Shape):
         def __init__(self, vertices: list[Vector2D]):
                 self.vertices = vertices  # local space
+        
+        @property
+        def area(self) -> float:
+                area = 0.0
+
+                for i in range(len(self.vertices)):
+                        p1 = self.vertices[i]
+                        p2 = self.vertices[(i + 1) % len(self.vertices)]
+
+                        area += p1.cross(p2)
+
+                return abs(area) * 0.5
+        
+        def centered(self) -> "Polygon":
+                centroid = self.centroid
+
+                centered_vertices = [
+                        v - centroid
+                        for v in self.vertices
+                ]
+
+                return Polygon(centered_vertices)
+
+        def inertia(self, mass: float) -> float:
+                numerator = 0.0
+                denominator = 0.0
+
+                count = len(self.vertices)
+
+                for i in range(count):
+                        p1 = self.vertices[i]
+                        p2 = self.vertices[(i + 1) % count]
+
+                        cross = p1.cross(p2)
+
+                        numerator += cross * (
+                                p1.dot(p1) +
+                                p1.dot(p2) +
+                                p2.dot(p2)
+                        )
+
+                        denominator += cross
+
+                if abs(denominator) < 1e-8:
+                        return float("inf")
+
+                inertia = (mass / 6.0) * (numerator / denominator)
+
+                return abs(inertia)
 
         def compute_aabb(self) -> AABB:
-                min_x = min(v.x for v in self.vertices)
-                min_y = min(v.y for v in self.vertices)
+                max_radius = 0.0
 
-                max_x = max(v.x for v in self.vertices)
-                max_y = max(v.y for v in self.vertices)
+                for v in self.vertices:
+                        dist_sq = v.x * v.x + v.y * v.y
+
+                        if dist_sq > max_radius:
+                                max_radius = dist_sq
+
+                max_radius = math.sqrt(max_radius)
 
                 return AABB(
-                        min_x,
-                        min_y,
-                        max_x - min_x,
-                        max_y - min_y
+                        -max_radius,
+                        -max_radius,
+                        max_radius * 2,
+                        max_radius * 2
                 )
                 
         def _project(self, axis: Vector2D):
@@ -198,7 +251,7 @@ class Polygon(Shape):
 
                 if not contacts:
                         # Fallback if floating point errors completely break the manifold
-                        contacts = [(self.center + other.center) * 0.5]
+                        contacts = [(self.centroid + other.centroid) * 0.5]
 
                 return contacts
         

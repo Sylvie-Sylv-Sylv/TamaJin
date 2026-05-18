@@ -1,7 +1,15 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+import pygame
+
 from gameplay.general.vector2d import Vector2D
+from gameplay.physics.angular_velocity import AngularVelocity
+from gameplay.physics.mass import Mass
+from gameplay.physics.polygon import Polygon
+from gameplay.physics.polygon import Polygon
+from gameplay.physics.position import Position
+from gameplay.physics.velocity import Velocity
 from gameplay.systems.system import System
 
 if TYPE_CHECKING:
@@ -11,64 +19,115 @@ if TYPE_CHECKING:
 class CollisionSolverVel(System):
         @staticmethod
         def apply_impulse(
-                body_a,
-                body_b,
-                contact_point,
-                normal,
-                restitution=0.0
+                poly_a: Polygon, poly_b: Polygon,
+                pos_a: Position, pos_b: Position,
+                velo_a: Velocity, velo_b: Velocity,
+                ang_velo_a: AngularVelocity, ang_velo_b: AngularVelocity,
+                mass_a: Mass, mass_b: Mass,
+                contact: Vector2D, contact_count: int, mtv: Vector2D,
+                restitution: float = 0.2
         ):
-                # lever arms
-                ra = contact_point - body_a.position
-                rb = contact_point - body_b.position
+                # OLD ENGINE CONVENTION:
+                # normal points from other -> self
+                normal = (mtv).normalize()
 
-                # velocity at contact point
-                va = body_a.velocity + Vector2D(
-                        -body_a.angular_velocity * ra.y,
-                        body_a.angular_velocity * ra.x
-                )
-                vb = body_b.velocity + Vector2D(-body_b.angular_velocity * rb.y, body_b.angular_velocity * rb.x)
+                # vectors from centers to contact
+                ra = contact - pos_a
+                rb = contact - pos_b
 
-                # relative velocity
-                rv = vb - va
+                # OLD ENGINE rotational tangential velocity convention
+                angular_linear_a = Vector2D(ra.y, ra.x) * ang_velo_a.val
+                angular_linear_b = Vector2D(rb.y, rb.x) * ang_velo_b.val
 
-                # relative velocity along normal
-                vel_along_normal = rv.dot(normal)
+                # velocity at contact
+                vel_a = velo_a + angular_linear_a
+                vel_b = velo_b + angular_linear_b
 
-                # already separating
+                # OLD ENGINE relative velocity convention
+                relative_velocity = vel_a - vel_b
+
+                vel_along_normal = relative_velocity.dot(normal)
+
+                # separating
                 if vel_along_normal > 0:
                         return
 
-                # scalar 2D cross products
+                # OLD ENGINE inertia approximation
+                inertia_a = 0.5 * mass_a.val * ra.dot(ra)
+                inertia_b = 0.5 * mass_b.val * rb.dot(rb)
+
+                inv_inertia_a = 0.0 if inertia_a == 0 else 1.0 / inertia_a
+                inv_inertia_b = 0.0 if inertia_b == 0 else 1.0 / inertia_b
+
                 ra_cross_n = ra.cross(normal)
                 rb_cross_n = rb.cross(normal)
 
-                # effective mass
-                inv_mass_sum = (
-                        body_a.inverse_mass +
-                        body_b.inverse_mass +
-                        (ra_cross_n ** 2) * body_a.inverse_inertia +
-                        (rb_cross_n ** 2) * body_b.inverse_inertia
+                denom = (
+                        mass_a.inv +
+                        mass_b.inv +
+                        (ra_cross_n ** 2) * inv_inertia_a +
+                        (rb_cross_n ** 2) * inv_inertia_b
                 )
 
-                # impulse magnitude
+                if denom == 0:
+                        return
+
                 j = -(1 + restitution) * vel_along_normal
-                j /= inv_mass_sum
+                j /= denom
+                j /= contact_count
 
                 impulse = normal * j
 
-                # linear impulse
-                body_a.velocity -= impulse * body_a.inverse_mass
-                body_b.velocity += impulse * body_b.inverse_mass
+                # OLD ENGINE linear impulse convention
+                velo_a.x += impulse.x * mass_a.inv
+                velo_a.y += impulse.y * mass_a.inv
 
-                # angular impulse
-                body_a.angular_velocity -= (
-                        ra.cross(impulse) * body_a.inverse_inertia
-                )
+                velo_b.x -= impulse.x * mass_b.inv
+                velo_b.y -= impulse.y * mass_b.inv
 
-                body_b.angular_velocity += (
-                        rb.cross(impulse) * body_b.inverse_inertia
-                )
-        
+                # OLD ENGINE angular impulse convention
+                ang_velo_a.val += ra.cross(impulse) * inv_inertia_a
+                ang_velo_b.val -= rb.cross(impulse) * inv_inertia_b
+                
         @staticmethod
         def step(scene : PhysicScene, dt: float = 1.0):
-                pass
+                for (entity_a, entity_b) in scene.narrow_collision_pairs:
+                        if not (pos_a := scene.fetch(entity_a, Position)) \
+                           or not (pos_b := scene.fetch(entity_b, Position)) \
+                           or not (velo_a := scene.fetch(entity_a, Velocity)) \
+                           or not (velo_b := scene.fetch(entity_b, Velocity)) \
+                           or not (ang_velo_a := scene.fetch(entity_a, AngularVelocity)) \
+                           or not (ang_velo_b := scene.fetch(entity_b, AngularVelocity)) \
+                           or not (mass_a := scene.fetch(entity_a, Mass)) \
+                           or not (mass_b := scene.fetch(entity_b, Mass)):
+                                print("Warning: Missing components for collision solver velocity. Skipping impulse application.")
+                                continue
+                        
+                        mtv = scene.narrow_collision_mtv[(entity_a, entity_b)]
+                        contacts = scene.narrow_collision_contacts[(entity_a, entity_b)]
+                        
+                        pos_a = scene.fetch(entity_a, Position)
+                        pos_b = scene.fetch(entity_b, Position)
+                        
+                        velo_a = scene.fetch(entity_a, Velocity)
+                        velo_b = scene.fetch(entity_b, Velocity)
+                        
+                        ang_velo_a = scene.fetch(entity_a, AngularVelocity)
+                        ang_velo_b = scene.fetch(entity_b, AngularVelocity)
+                        
+                        mass_a = scene.fetch(entity_a, Mass)
+                        mass_b = scene.fetch(entity_b, Mass)
+                        
+                        poly_a = scene.fetch(entity_a, Polygon)
+                        poly_b = scene.fetch(entity_b, Polygon)
+                        
+                        for contact in contacts[0:1]: # only apply impulse on the first contact point for now
+                                CollisionSolverVel.apply_impulse(
+                                        poly_a, poly_b,
+                                        pos_a, pos_b,
+                                        velo_a, velo_b,
+                                        ang_velo_a, ang_velo_b,
+                                        mass_a, mass_b,
+                                        contact, len(contacts), mtv,
+                                        1.0
+                                )

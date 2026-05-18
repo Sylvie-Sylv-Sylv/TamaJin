@@ -1,8 +1,10 @@
 import pygame as pygame
 import math
 
+from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.new_force import NewForce
 from gameplay.physics.position import Position
+from gameplay.physics.rotation import Rotation
 from gameplay.physics.velocity import Velocity
 from gameplay.physics.old_force import OldForce
 from gameplay.physics.mass import Mass
@@ -43,6 +45,8 @@ class PhysicScene(Scene):
                 self.register_component(Velocity)
                 self.register_component(OldForce)
                 self.register_component(NewForce)
+                self.register_component(Rotation)
+                self.register_component(AngularVelocity)
                 self.register_component(Mass)
                 self.register_component(AABB)
                 self.register_component(Polygon)

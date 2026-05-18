@@ -46,7 +46,8 @@ class Scene:
                 entity_id: str,
                 component_type: type[T]
         ) -> T | None:
-                return self.components.get(component_type, {}).get(entity_id, None)
+                result = self.components.get(component_type, {}).get(entity_id, None)
+                return result
 
         def query(self, *component_types):
                 component_maps = [

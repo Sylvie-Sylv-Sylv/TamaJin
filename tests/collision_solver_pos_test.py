@@ -34,9 +34,9 @@ def main():
         scene = PhysicScene()
 
         # Two overlapping polygons (same size, slightly offset)
-        poly_a = Polygon(_make_square(120))
-        poly_b = Polygon(_make_square(120))
-
+        poly_a = Polygon(_make_square(120)).centered()
+        poly_b = Polygon(_make_square(120)).centered()
+        
         # The scene's broad phase uses AABB components, so we give matching AABBs.
         # Note: Polygon vertices are local space; PhysicScene's renderer doesn't transform.
         # Collision SAT uses local vertices too, so we offset via Position and MTV only.

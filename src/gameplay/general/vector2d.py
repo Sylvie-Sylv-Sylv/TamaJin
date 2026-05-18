@@ -13,6 +13,12 @@ class Vector2D:
 
         def perpendicular(self):
                 return Vector2D(-self.y, self.x)
+        
+        # ---
+        
+        @staticmethod
+        def cross_scalar_vec(scalar: float, vec: "Vector2D") -> "Vector2D":
+                return Vector2D(-scalar * vec.y, scalar * vec.x)
 
         # ------------------------
         # Representation
