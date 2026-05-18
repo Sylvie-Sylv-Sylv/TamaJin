@@ -10,7 +10,7 @@ from gameplay.physics.old_force import OldForce
 from gameplay.physics.position import Position
 from gameplay.physics.polygon import Polygon
 from gameplay.physics.velocity import Velocity
-from gameplay.scenes.physic_scene import PhysicScene
+from gameplay.scenes.sparse_physic_scene import PhysicScene
 
 
 def _make_square(size: float) -> list[Vector2D]:

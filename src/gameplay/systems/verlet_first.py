@@ -2,7 +2,7 @@ from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.rotation import Rotation
 from gameplay.systems.system import System
 
-from gameplay.scenes.scene import Scene
+from gameplay.scenes.sparse_scene import SparseScene
 
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
@@ -11,7 +11,7 @@ from gameplay.physics.mass import Mass
 
 class VerletFirst(System):       
         @staticmethod
-        def step(scene : Scene, dt : float):
+        def step(scene : SparseScene, dt : float):
                 for entity, position, velocity, old_force, mass in scene.query(Position, Velocity, OldForce, Mass):
                         # old acceleration
                         a_old = old_force / mass.val

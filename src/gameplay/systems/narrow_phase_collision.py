@@ -7,7 +7,7 @@ from gameplay.physics.rotation import Rotation
 from gameplay.systems.system import System
 
 if TYPE_CHECKING:
-        from gameplay.scenes.physic_scene import PhysicScene
+        from gameplay.scenes.sparse_physic_scene import PhysicScene
 
 
 class NarrowPhaseCollision(System):

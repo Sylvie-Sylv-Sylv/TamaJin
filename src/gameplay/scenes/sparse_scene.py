@@ -5,7 +5,7 @@ from gameplay.general.vector2d import Vector2D
 
 T = TypeVar("T")
 
-class Scene:
+class SparseScene:
         def __init__(self, name):
                 self.name = name
                 
@@ -46,8 +46,12 @@ class Scene:
                 entity_id: str,
                 component_type: type[T]
         ) -> T | None:
-                result = self.components.get(component_type, {}).get(entity_id, None)
-                return result
+                storage = self.components.get(component_type)
+
+                if storage is None:
+                        return None
+
+                return storage.get(entity_id)
 
         def query(self, *component_types):
                 component_maps = [
@@ -55,20 +59,17 @@ class Scene:
                         for t in component_types
                 ]
 
-                entity_sets = [
-                        set(storage.keys())
-                        for storage in component_maps
-                ]
+                smallest = min(component_maps, key=len)
 
-                matching_entities = set.intersection(*entity_sets)
-
-                for entity in matching_entities:
-                        yield(entity,
-                              *[
-                                      storage[entity]
-                                      for storage in component_maps
-                              ]
-                        )
+                for entity in smallest:
+                        if all(entity in storage for storage in component_maps):
+                                yield (
+                                        entity,
+                                        *[
+                                        storage[entity]
+                                        for storage in component_maps
+                                        ]
+                                )
 
         @abstractmethod
         def step():

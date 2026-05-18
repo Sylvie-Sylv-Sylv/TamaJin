@@ -6,7 +6,7 @@ from gameplay.systems.system import System
 from gameplay.physics.aabb import AABB
 
 if TYPE_CHECKING:
-        from gameplay.scenes.physic_scene import PhysicScene
+        from gameplay.scenes.sparse_physic_scene import PhysicScene
 
 class BroadPhaseCollision(System):
         @staticmethod

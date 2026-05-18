@@ -1,7 +1,7 @@
 from gameplay.physics.new_force import NewForce
 from gameplay.systems.system import System
 
-from gameplay.scenes.scene import Scene
+from gameplay.scenes.sparse_scene import SparseScene
 
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
@@ -10,7 +10,7 @@ from gameplay.physics.mass import Mass
 
 class VerletSecond(System):       
         @staticmethod
-        def step(scene : Scene, dt : float):
+        def step(scene : SparseScene, dt : float):
                 for entity, velocity, old_force, new_force, mass in scene.query(Velocity, OldForce, NewForce, Mass):
                         # old acceleration
                         a_old = old_force / mass.val

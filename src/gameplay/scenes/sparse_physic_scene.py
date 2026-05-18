@@ -9,7 +9,7 @@ from gameplay.physics.position import Position
 from gameplay.physics.rotation import Rotation
 from gameplay.physics.velocity import Velocity
 from gameplay.runtime.quad_tree import QuadTree
-from gameplay.scenes.scene import Scene
+from gameplay.scenes.sparse_scene import SparseScene
 from gameplay.systems.broad_phase_collision import BroadPhaseCollision
 from gameplay.systems.collision_solver_pos import CollisionSolverPos
 from gameplay.systems.collision_solver_vel import CollisionSolverVel
@@ -19,7 +19,7 @@ from gameplay.systems.runtime_reset import RuntimeReset
 from gameplay.systems.verlet_first import VerletFirst
 from gameplay.systems.verlet_second import VerletSecond
 
-class PhysicScene(Scene):
+class PhysicScene(SparseScene):
         def __init__(self):
                 super().__init__("basic_scene")
                 

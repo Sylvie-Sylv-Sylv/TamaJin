@@ -8,7 +8,7 @@ from gameplay.physics.rotation import Rotation
 from gameplay.physics.velocity import Velocity
 from gameplay.physics.old_force import OldForce
 from gameplay.physics.mass import Mass
-from gameplay.scenes.physic_scene import PhysicScene
+from gameplay.scenes.sparse_physic_scene import PhysicScene
 from gameplay.systems.verlet_first import VerletFirst
 from gameplay.systems.quad_tree_inserter import QuadTreeInserter
 from gameplay.runtime.quad_tree import QuadTree
@@ -24,7 +24,7 @@ from gameplay.physics.polygon import Polygon
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
 from gameplay.runtime.quad_tree import QuadTree
-from gameplay.scenes.scene import Scene
+from gameplay.scenes.sparse_scene import SparseScene
 from gameplay.systems.broad_phase_collision import BroadPhaseCollision
 from gameplay.systems.collision_solver_pos import CollisionSolverPos
 from gameplay.systems.narrow_phase_collision import NarrowPhaseCollision
