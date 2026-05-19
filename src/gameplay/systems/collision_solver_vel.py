@@ -7,13 +7,12 @@ from gameplay.general.vector2d import Vector2D
 from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.mass import Mass
 from gameplay.physics.polygon import Polygon
-from gameplay.physics.polygon import Polygon
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
 from gameplay.systems.system import System
 
 if TYPE_CHECKING:
-        from gameplay.scenes.sparse_physic_scene import PhysicScene
+        from gameplay.scenes.physic_scene import PhysicScene
 
 
 class CollisionSolverVel(System):
@@ -92,36 +91,36 @@ class CollisionSolverVel(System):
         @staticmethod
         def step(scene : PhysicScene, dt: float = 1.0):
                 for (entity_a, entity_b) in scene.narrow_collision_pairs:
-                        if not (pos_a := scene.fetch(entity_a, Position)) \
-                           or not (pos_b := scene.fetch(entity_b, Position)) \
-                           or not (velo_a := scene.fetch(entity_a, Velocity)) \
-                           or not (velo_b := scene.fetch(entity_b, Velocity)) \
-                           or not (ang_velo_a := scene.fetch(entity_a, AngularVelocity)) \
-                           or not (ang_velo_b := scene.fetch(entity_b, AngularVelocity)) \
-                           or not (mass_a := scene.fetch(entity_a, Mass)) \
-                           or not (mass_b := scene.fetch(entity_b, Mass)):
+                        if not (pos_a := scene.fetch(entity_a, 'position')) \
+                           or not (pos_b := scene.fetch(entity_b, 'position')) \
+                           or not (velo_a := scene.fetch(entity_a, 'velocity')) \
+                           or not (velo_b := scene.fetch(entity_b, 'velocity')) \
+                           or not (ang_velo_a := scene.fetch(entity_a, 'angular_velocity')) \
+                           or not (ang_velo_b := scene.fetch(entity_b, 'angular_velocity')) \
+                           or not (mass_a := scene.fetch(entity_a, 'mass')) \
+                           or not (mass_b := scene.fetch(entity_b, 'mass')):
                                 print("Warning: Missing components for collision solver velocity. Skipping impulse application.")
                                 continue
                         
                         mtv = scene.narrow_collision_mtv[(entity_a, entity_b)]
                         contacts = scene.narrow_collision_contacts[(entity_a, entity_b)]
                         
-                        pos_a = scene.fetch(entity_a, Position)
-                        pos_b = scene.fetch(entity_b, Position)
+                        pos_a = scene.fetch(entity_a, 'position')
+                        pos_b = scene.fetch(entity_b, 'position')
                         
-                        velo_a = scene.fetch(entity_a, Velocity)
-                        velo_b = scene.fetch(entity_b, Velocity)
+                        velo_a = scene.fetch(entity_a, 'velocity')
+                        velo_b = scene.fetch(entity_b, 'velocity')
                         
-                        ang_velo_a = scene.fetch(entity_a, AngularVelocity)
-                        ang_velo_b = scene.fetch(entity_b, AngularVelocity)
+                        ang_velo_a = scene.fetch(entity_a, 'angular_velocity')
+                        ang_velo_b = scene.fetch(entity_b, 'angular_velocity')
                         
-                        mass_a = scene.fetch(entity_a, Mass)
-                        mass_b = scene.fetch(entity_b, Mass)
+                        mass_a = scene.fetch(entity_a, 'mass')
+                        mass_b = scene.fetch(entity_b, 'mass')
                         
-                        poly_a = scene.fetch(entity_a, Polygon)
-                        poly_b = scene.fetch(entity_b, Polygon)
+                        poly_a = scene.fetch(entity_a, 'polygon')
+                        poly_b = scene.fetch(entity_b, 'polygon')
                         
-                        for contact in contacts[0:1]: # only apply impulse on the first contact point for now
+                        for contact in contacts: # only apply impulse on the first contact point for now
                                 CollisionSolverVel.apply_impulse(
                                         poly_a, poly_b,
                                         pos_a, pos_b,

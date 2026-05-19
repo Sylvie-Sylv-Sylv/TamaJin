@@ -1,19 +1,18 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from gameplay.physics.position import Position
 from gameplay.systems.system import System
 from gameplay.physics.aabb import AABB
 
 if TYPE_CHECKING:
-        from gameplay.scenes.sparse_physic_scene import PhysicScene
+        from gameplay.scenes.physic_scene import PhysicScene
 
 class BroadPhaseCollision(System):
         @staticmethod
         def step(scene: PhysicScene):
                 scene.broad_collision_pairs.clear()
 
-                for entity, aabb, position in scene.query(AABB, Position):
+                for entity, aabb, position in scene.query('aabb', 'position'):
                         world_aabb = aabb.move(position)
                         
                         possible_collisions = scene.tree.query(world_aabb)

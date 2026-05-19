@@ -1,30 +1,27 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from gameplay.physics.polygon import Polygon
-from gameplay.physics.position import Position
-from gameplay.physics.rotation import Rotation
 from gameplay.systems.system import System
 
 if TYPE_CHECKING:
-        from gameplay.scenes.sparse_physic_scene import PhysicScene
+        from gameplay.scenes.physic_scene import PhysicScene
 
 
 class NarrowPhaseCollision(System):
         @staticmethod
         def step(scene : PhysicScene):
                 for entity_a, entity_b in scene.broad_collision_pairs:
-                        if (polygon_a := scene.fetch(entity_a, Polygon)) \
-                           and (polygon_b := scene.fetch(entity_b, Polygon)):
+                        if (polygon_a := scene.fetch(entity_a, 'polygon')) \
+                           and (polygon_b := scene.fetch(entity_b, 'polygon')):
                                 moved_a = polygon_a
                                 moved_b = polygon_b
                                 
-                                if (rotation_a := scene.fetch(entity_a, Rotation)) \
-                                   and (rotation_b := scene.fetch(entity_b, Rotation)):
+                                if (rotation_a := scene.fetch(entity_a, 'rotation')) \
+                                   and (rotation_b := scene.fetch(entity_b, 'rotation')):
                                         moved_a = moved_a.rotate(rotation_a.val)
                                         moved_b = moved_b.rotate(rotation_b.val)
-                                if (position_a := scene.fetch(entity_a, Position)) \
-                                   and (position_b := scene.fetch(entity_b, Position)):
+                                if (position_a := scene.fetch(entity_a, 'position')) \
+                                   and (position_b := scene.fetch(entity_b, 'position')):
                                         moved_a = moved_a.move(position_a)
                                         moved_b = moved_b.move(position_b)
 

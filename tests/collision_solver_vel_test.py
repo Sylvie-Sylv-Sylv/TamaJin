@@ -12,7 +12,7 @@ from gameplay.physics.position import Position
 from gameplay.physics.polygon import Polygon
 from gameplay.physics.rotation import Rotation
 from gameplay.physics.velocity import Velocity
-from gameplay.scenes.sparse_physic_scene import PhysicScene
+from gameplay.scenes.physic_scene import PhysicScene
 
 
 def _make_square(size: float) -> list[Vector2D]:
@@ -40,31 +40,31 @@ def main():
         poly_b = Polygon(_make_square(120)).centered()
 
         # The scene's broad phase uses AABB components, so we give matching AABBs.
-        # Note: Polygon vertices are local space; PhysicScene's renderer doesn't transform.
-        # Collision SAT uses local vertices too, so we offset via Position and MTV only.
+        # Note: "polygon" vertices are local space; PhysicScene's renderer doesn't transform.
+        # Collision SAT uses local vertices too, so we offset via "position" and MTV only.
         scene.add_entity(
                 "poly_a",
-                Position(200, 200),
-                Velocity(5, 0),
-                OldForce(0, 0),
-                NewForce(0, 0),
-                Rotation(0),
-                AngularVelocity(0),
-                Mass(0.0001),
-                poly_a.compute_aabb(),
-                poly_a,
+                position = Position(200, 200),
+                velocity = Velocity(5, 0),
+                old_force = OldForce(0, 0),
+                new_force = NewForce(0.002, 0),
+                rotation = Rotation(0),
+                angular_velocity = AngularVelocity(0),
+                mass = Mass(1),
+                aabb = poly_a.compute_aabb(),
+                polygon = poly_a,
         )
         scene.add_entity(
                 "poly_b",
-                Position(600, 200),
-                Velocity(-5, 0),
-                OldForce(0, 0),
-                NewForce(0, 0),
-                Rotation(0),
-                AngularVelocity(0),
-                Mass(0.0001),
-                poly_b.compute_aabb(),
-                poly_b,
+                position = Position(600, 150),
+                velocity = Velocity(0, 0),
+                old_force = OldForce(0, 0),
+                new_force = NewForce(0, 0),
+                rotation = Rotation(0),
+                angular_velocity = AngularVelocity(0.1),
+                mass = Mass(2),
+                aabb = poly_b.compute_aabb(),
+                polygon = poly_b,
         )
 
         running = True
@@ -78,12 +78,12 @@ def main():
 
                 scene.tree.pg_render(window, width=1)
 
-                if (position_a := scene.fetch("poly_a", Position)) \
-                   and (position_b := scene.fetch("poly_b", Position)) \
-                   and (rotation_a := scene.fetch("poly_a", Rotation)) \
-                   and (rotation_b := scene.fetch("poly_b", Rotation)) \
-                   and (poly_a := scene.fetch("poly_a", Polygon)) \
-                   and (poly_b := scene.fetch("poly_b", Polygon)):
+                if (position_a := scene.fetch("poly_a", "position")) \
+                   and (position_b := scene.fetch("poly_b", "position")) \
+                   and (rotation_a := scene.fetch("poly_a", "rotation")) \
+                   and (rotation_b := scene.fetch("poly_b", "rotation")) \
+                   and (poly_a := scene.fetch("poly_a", "polygon")) \
+                   and (poly_b := scene.fetch("poly_b", "polygon")):
                         moved_a = poly_a.rotate(rotation_a.val).move(position_a)
                         moved_b = poly_b.rotate(rotation_b.val).move(position_b)
 

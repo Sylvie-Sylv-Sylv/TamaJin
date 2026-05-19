@@ -259,8 +259,7 @@ class Polygon(Shape):
                 moved_vertices = [v + position for v in self.vertices]
                 return Polygon(moved_vertices)
         
-        def rotate(self, angle_degrees: float):
-                angle_radians = math.radians(angle_degrees)
+        def rotate(self, angle_radians: float):
                 cos_a = math.cos(angle_radians)
                 sin_a = math.sin(angle_radians)
 
