@@ -9,11 +9,13 @@ from gameplay.physics.position import Position
 from gameplay.physics.shape import Shape
 
 class Polygon(Shape):
+        """Represents a convex polygon defined by a list of local-space vertices."""
         def __init__(self, vertices: list[Vector2D]):
                 self.vertices = vertices  # local space
         
         @property
         def area(self) -> float:
+                """Calculates the area of the polygon using the Shoelace formula."""
                 area = 0.0
 
                 for i in range(len(self.vertices)):
@@ -35,6 +37,12 @@ class Polygon(Shape):
                 return Polygon(centered_vertices)
 
         def inertia(self, mass: float) -> float:
+                """
+                Computes the moment of inertia for the polygon.
+                
+                :param mass: Total mass of the object.
+                :return: The calculated rotational inertia. Returns inf for degenerate polygons.
+                """
                 numerator = 0.0
                 denominator = 0.0
 
@@ -101,6 +109,13 @@ class Polygon(Shape):
                 return Vector2D(sum_x / count, sum_y / count)
         
         def sat(self, other: Polygon):
+                """
+                Performs the Separating Axis Theorem (SAT) collision test.
+                
+                :param other: The other polygon to test against.
+                :return: A tuple of (bool, Vector2D) indicating if a collision occurred 
+                         and the Minimum Translation Vector (MTV).
+                """
                 smallest_overlap = float("inf")
                 smallest_axis = None
 
@@ -155,6 +170,14 @@ class Polygon(Shape):
                 return True, mtv
         
         def contact_points(self, other: Polygon, mtv: Vector2D):
+                """
+                Finds the contact manifold (points of intersection) between two colliding polygons.
+                Uses the Sutherland-Hodgman clipping algorithm against a reference edge.
+
+                :param other: The other colliding polygon.
+                :param mtv: The Minimum Translation Vector from the SAT test.
+                :return: A list of Vector2D contact points.
+                """
                 normal = mtv.normalize()
 
                 # 1. Ensure the normal always points from 'self' to 'other'

@@ -1,3 +1,4 @@
+import numpy as np
+
 class AngularVelocity:
-        def __init__(self, val: float = 0.0):
-                self.val = val
+        schema = np.dtype([("val", np.float32)], align=True)

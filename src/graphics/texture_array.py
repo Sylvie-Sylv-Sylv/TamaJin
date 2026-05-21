@@ -3,6 +3,11 @@ from PIL import Image
 
 
 class TextureArray():
+    """
+    Manages an OpenGL Texture Array (GL_TEXTURE_2D_ARRAY).
+    This allows multiple textures of the same dimension to be stored in a single 
+    GPU resource, accessible via an index in shaders to reduce draw calls.
+    """
     def __init__(
         self,
         ctx: mgl.Context,

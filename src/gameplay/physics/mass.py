@@ -1,9 +1,11 @@
+import numpy as np
+
 class Mass:
-        def __init__(self, val: float):
-                self.val = val
-        
-        @property
-        def inv(self):
-                if self.val == 0:
-                        raise ValueError("Mass value cannot be zero when calculating inverse.")
-                return 1 / self.val
+        """
+        Physics mass component. 
+        Stored as a pair of (value, inverse) to avoid division during solver steps.
+        """
+        schema = np.dtype([
+                ("val", np.float32),
+                ("inv", np.float32)
+        ], align=True)

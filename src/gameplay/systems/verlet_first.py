@@ -12,13 +12,15 @@ from gameplay.physics.mass import Mass
 class VerletFirst(System):       
         @staticmethod
         def step(scene : Scene, dt : float):
-                for entity, position, velocity, old_force, mass in scene.query("position", "velocity", "old_force", "mass"):
+                for entity, position, velocity, old_force, mass in scene.query(Position, Velocity, OldForce, Mass):
                         # old acceleration
-                        a_old = old_force / mass.val
+                        ax = old_force['x'] * mass['inv']
+                        ay = old_force['y'] * mass['inv']
                         
                         # integrate position
-                        position += velocity * dt + 0.5 * a_old * dt * dt
+                        position['x'] += velocity['x'] * dt + 0.5 * ax * dt * dt
+                        position['y'] += velocity['y'] * dt + 0.5 * ay * dt * dt
                 
-                for entity, rotation, angular_velocity in scene.query("rotation", "angular_velocity"):
+                for entity, rotation, angular_velocity in scene.query(Rotation, AngularVelocity):
                         # integrate rotation
-                        rotation.val += angular_velocity.val * dt
+                        rotation['val'] += angular_velocity['val'] * dt

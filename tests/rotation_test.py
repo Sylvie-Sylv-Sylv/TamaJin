@@ -40,6 +40,7 @@ def main():
         window = pygame.display.set_mode((800, 600))
         
         scene = PhysicScene()
+        scene.initialize()
         
         polygon = Polygon([
                 Vector2D(-32, -32),
@@ -50,10 +51,16 @@ def main():
         
         scene.add_entity(
                 "entity_1",
-                Position(100, 100), Velocity(0, 0), OldForce(0, 0), NewForce(0, 0),
-                Rotation(0), AngularVelocity(1),
-                polygon,
-                polygon.compute_aabb()
+                {
+                        Position: (100.0, 100.0),
+                        Velocity: (0.0, 0.0),
+                        OldForce: (0.0, 0.0),
+                        NewForce: (0.0, 0.0),
+                        Rotation: (0.0,),
+                        AngularVelocity: (1.0,),
+                        Polygon: polygon,
+                        AABB: polygon.compute_aabb()
+                }
         )
         
         clock = pygame.time.Clock()
@@ -69,10 +76,11 @@ def main():
                 
                 scene.tree.pg_render(window,  width = 1)
                 
-                if (polygon := scene.fetch("entity_1", Polygon)) \
-                   and (position := scene.fetch("entity_1", Position)) \
-                   and (rotation := scene.fetch("entity_1", Rotation)):
-                        polygon.rotate(rotation.val).move(position).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                poly = scene.fetch("entity_1", Polygon)
+                pos = scene.fetch("entity_1", Position)
+                rot = scene.fetch("entity_1", Rotation)
+                if all(c is not None for c in [poly, pos, rot]):
+                        poly.rotate(rot['val']).move(Vector2D(pos['x'], pos['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
                 pygame.display.flip()
                 clock.tick(60)

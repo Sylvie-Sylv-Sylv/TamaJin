@@ -11,14 +11,15 @@ from gameplay.physics.mass import Mass
 class VerletSecond(System):       
         @staticmethod
         def step(scene : Scene, dt : float):
-                for entity, velocity, old_force, new_force, mass in scene.query('velocity', 'old_force', 'new_force', 'mass'):
-                        # old acceleration
-                        a_old = old_force / mass.val
-                        # compute new acceleration
-                        a_new = new_force / mass.val
+                for entity, velocity, old_force, new_force, mass in scene.query(Velocity, OldForce, NewForce, Mass):
+                        # compute average acceleration (Trapezoidal rule)
+                        ax = 0.5 * (old_force['x'] + new_force['x']) * mass['inv']
+                        ay = 0.5 * (old_force['y'] + new_force['y']) * mass['inv']
                         
                         # integrate velocity
-                        velocity += 0.5 * (a_old + a_new) * dt
+                        velocity['x'] += ax * dt
+                        velocity['y'] += ay * dt
                         
-                        old_force.x = new_force.x
-                        old_force.y = new_force.y
+                        # carry over force for next frame
+                        old_force['x'] = new_force['x']
+                        old_force['y'] = new_force['y']

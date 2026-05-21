@@ -32,33 +32,35 @@ def main():
         clock = pygame.time.Clock()
 
         scene = PhysicScene()
+        scene.initialize()
 
         # Two overlapping polygons (same size, slightly offset)
         poly_a = Polygon(_make_square(120)).centered()
         poly_b = Polygon(_make_square(120)).centered()
         
-        # The scene's broad phase uses AABB components, so we give matching AABBs.
-        # Note: Polygon vertices are local space; PhysicScene's renderer doesn't transform.
-        # Collision SAT uses local vertices too, so we offset via Position and MTV only.
         scene.add_entity(
                 "poly_a",
-                Position(200, 250),
-                Velocity(0, 0),
-                OldForce(0, 0),
-                NewForce(0, 0),
-                Mass(1.0),
-                poly_a.compute_aabb(),
-                poly_a,
+                {
+                        Position: (200.0, 250.0),
+                        Velocity: (0.0, 0.0),
+                        OldForce: (0.0, 0.0),
+                        NewForce: (0.0, 0.0),
+                        Mass: (1.0, 1.0),
+                        AABB: poly_a.compute_aabb(),
+                        Polygon: poly_a,
+                }
         )
         scene.add_entity(
                 "poly_b",
-                Position(300, 250),
-                Velocity(0, 0),
-                OldForce(0, 0),
-                NewForce(0, 0),
-                Mass(1.0),
-                poly_b.compute_aabb(),
-                poly_b,
+                {
+                        Position: (300.0, 250.0),
+                        Velocity: (0.0, 0.0),
+                        OldForce: (0.0, 0.0),
+                        NewForce: (0.0, 0.0),
+                        Mass: (1.0, 1.0),
+                        AABB: poly_b.compute_aabb(),
+                        Polygon: poly_b,
+                }
         )
         
         scene.step()
@@ -72,12 +74,12 @@ def main():
                 window.fill((0, 0, 0))
                 scene.tree.pg_render(window, width=1)
 
-                if (position_a := scene.fetch("poly_a", Position)) \
-                   and (position_b := scene.fetch("poly_b", Position)) \
-                   and (poly_a := scene.fetch("poly_a", Polygon)) \
-                   and (poly_b := scene.fetch("poly_b", Polygon)):
-                        moved_a = poly_a.move(position_a)
-                        moved_b = poly_b.move(position_b)
+                pos_a = scene.fetch("poly_a", Position)
+                pos_b = scene.fetch("poly_b", Position)
+                poly_a = scene.fetch("poly_a", Polygon)
+                poly_b = scene.fetch("poly_b", Polygon)
+
+                if all(c is not None for c in [pos_a, pos_b, poly_a, poly_b]):
                            
                         moved_a.pg_render(window, (255, 255, 255))
                         moved_b.pg_render(window, (255, 255, 255))

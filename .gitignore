@@ -1,3 +1,5 @@
 __pycache__/
 .vscode/
 *.py[cod]
+# CocoIndex Code (ccc)
+/.cocoindex_code/

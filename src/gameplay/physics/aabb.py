@@ -6,6 +6,10 @@ from gameplay.general.vector2d import Vector2D
 
 
 class AABB:
+        """
+        An Axis-Aligned Bounding Box used for broad-phase collision detection 
+        and spatial partitioning.
+        """
         def __init__(
                 self,
                 x: float,
@@ -73,6 +77,7 @@ class AABB:
         # ------------------------
 
         def intersects(self, other: AABB) -> bool:
+                """Standard AABB vs AABB intersection check."""
                 return not (
                         self.right < other.left
                         or self.left > other.right
