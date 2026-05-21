@@ -14,8 +14,8 @@ class CollisionSolverPos(System):
                                 total_inv = mass_a['inv'] + mass_b['inv']
                                    
                                 if (position_a := scene.fetch(entity_a, Position)) is not None:
-                                        position_a['x'] += mtv.x * mass_a['inv'] / total_inv * 1.0001
-                                        position_a['y'] += mtv.y * mass_a['inv'] / total_inv * 1.0001
+                                        position_a['x'] += mtv.x * mass_a['inv'] / total_inv * 0.999
+                                        position_a['y'] += mtv.y * mass_a['inv'] / total_inv * 0.999
                                 if (position_b := scene.fetch(entity_b, Position)) is not None:
-                                        position_b['x'] -= mtv.x * mass_b['inv'] / total_inv * 1.0001
-                                        position_b['y'] -= mtv.y * mass_b['inv'] / total_inv * 1.0001
+                                        position_b['x'] -= mtv.x * mass_b['inv'] / total_inv * 0.999
+                                        position_b['y'] -= mtv.y * mass_b['inv'] / total_inv * 0.999

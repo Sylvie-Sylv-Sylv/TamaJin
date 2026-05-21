@@ -63,7 +63,7 @@ def main():
                         NewForce: (0.0, 0.0),
                         Rotation: (0.0,),
                         AngularVelocity: (0.1,),
-                        Mass: (60.0, 1.0 / 60.0),
+                        Mass: (6.0, 1.0 / 6.0),
                         AABB: poly_b.compute_aabb(),
                         Polygon: poly_b,
                 }
@@ -76,7 +76,7 @@ def main():
                         if event.type == pygame.QUIT:
                                 running = False
                                 
-                scene.step(1)
+                scene.step(dt = 1, substeps = 4)
 
                 scene.tree.pg_render(window, width=1)
 

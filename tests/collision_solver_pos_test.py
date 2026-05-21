@@ -80,7 +80,9 @@ def main():
                 poly_b = scene.fetch("poly_b", Polygon)
 
                 if all(c is not None for c in [pos_a, pos_b, poly_a, poly_b]):
-                           
+                        moved_a = poly_a.move(Vector2D(pos_a['x'], pos_a['y']))
+                        moved_b = poly_b.move(Vector2D(pos_b['x'], pos_b['y']))
+
                         moved_a.pg_render(window, (255, 255, 255))
                         moved_b.pg_render(window, (255, 255, 255))
                         
