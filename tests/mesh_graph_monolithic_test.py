@@ -18,9 +18,8 @@ set_color = SetNode(v_color, color)
 # Buld
 # ------------------------
 
-vertex_shader = builder.build(
-    ends = [set_position, set_color]
-)
+builder.set_ends([set_position, set_color])
+vertex_shader = builder.build()
 
 print(vertex_shader)
 
@@ -40,8 +39,7 @@ set_frag = SetNode(DefinedVar(VarType.VEC4, "f_color"), VecNode(v_color, FloatCo
 # Buld
 # ------------------------
 
-fragment_shader = fragment_builder.build(
-    ends=[set_frag]
-)
+fragment_builder.set_ends([set_frag])
+fragment_shader = fragment_builder.build()
 
 print(fragment_shader)

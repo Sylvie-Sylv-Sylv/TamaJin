@@ -1,9 +1,7 @@
 import moderngl as mgl
 
-from src.unit.i_unit import IUnit
 
-
-class Mesh(IUnit):
+class Mesh:
     def __init__(
         self,
         ctx: mgl.Context,
