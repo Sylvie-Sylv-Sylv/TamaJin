@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from gameplay.general.vector2d import Vector2D
+from gameplay.general.vector2d import Vec2
 from gameplay.systems.system import System
 from gameplay.physics.polygon import Polygon
 from gameplay.physics.position import Position
@@ -31,8 +31,8 @@ class NarrowPhaseCollision(System):
                                         moved_b = moved_b.rotate(rotation_b['val'])
                                 if (position_a := scene.fetch(entity_a, Position)) is not None \
                                    and (position_b := scene.fetch(entity_b, Position)) is not None:
-                                        moved_a = moved_a.move(Vector2D(position_a['x'], position_a['y']))
-                                        moved_b = moved_b.move(Vector2D(position_b['x'], position_b['y']))
+                                        moved_a = moved_a.move((position_a['x'], position_a['y']))
+                                        moved_b = moved_b.move((position_b['x'], position_b['y']))
 
                                         if results := moved_a.sat(moved_b):
                                                 is_colliding = results[0]
@@ -40,7 +40,7 @@ class NarrowPhaseCollision(System):
                                                 
                                                 if entity_a > entity_b:
                                                         pair = (entity_b, entity_a)
-                                                        mtv = -mtv
+                                                        mtv = (-mtv[0], -mtv[1])
                                                 else:
                                                         pair = (entity_a, entity_b)
                                                 
@@ -48,7 +48,7 @@ class NarrowPhaseCollision(System):
                                                         scene.narrow_collision_pairs.add(pair)
                                                         scene.narrow_collision_mtv[pair] = mtv
                                                         
-                                                        sep_a = moved_a.move(mtv * 0.5 * 0.999)
-                                                        sep_b = moved_b.move(-mtv * 0.5 * 0.999)
+                                                        sep_a = moved_a.move((mtv[0] * 0.5 * 0.999, mtv[1] * 0.5 * 0.999))
+                                                        sep_b = moved_b.move((-mtv[0] * 0.5 * 0.999, -mtv[1] * 0.5 * 0.999))
                                                         
                                                         scene.narrow_collision_contacts[pair] = sep_a.contact_points(sep_b, mtv)

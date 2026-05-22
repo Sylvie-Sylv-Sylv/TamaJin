@@ -1,7 +1,7 @@
 import numpy as np
-from gameplay.general.vector2d import Vector2D
 
-class OldForce(Vector2D):
+class OldForce:
+        """Physics force component using numpy dtype for buffer alignment."""
         schema = np.dtype([
                 ("x", np.float32),
                 ("y", np.float32)

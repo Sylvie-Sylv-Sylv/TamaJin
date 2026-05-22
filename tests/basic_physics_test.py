@@ -14,7 +14,6 @@ from gameplay.runtime.quad_tree import QuadTree
 from gameplay.physics.aabb import AABB
 
 
-from gameplay.general.vector2d import Vector2D
 from gameplay.physics.aabb import AABB
 from gameplay.physics.new_force import NewForce
 from gameplay.physics.old_force import OldForce
@@ -25,7 +24,6 @@ from gameplay.physics.velocity import Velocity
 from gameplay.runtime.quad_tree import QuadTree
 from gameplay.scenes.scene import Scene
 from gameplay.systems.broad_phase_collision import BroadPhaseCollision
-from gameplay.systems.collision_solver_pos import CollisionSolverPos
 from gameplay.systems.narrow_phase_collision import NarrowPhaseCollision
 from gameplay.systems.quad_tree_inserter import QuadTreeInserter
 from gameplay.systems.runtime_reset import RuntimeReset
@@ -39,7 +37,6 @@ class PhysicScene(Scene):
                 self.tree: QuadTree = QuadTree(AABB(0, 0, 800, 800))
                 self.broad_collision_pairs: set[tuple[str, str]] = set()
                 self.narrow_collision_pairs: set[tuple[str, str]] = set() # (entity_a, entity_b)
-                self.narrow_collision_mtv: dict[tuple[str, str], Vector2D] = {} # (entity_a, entity_b) -> MTV vector
                 
                 self.register_component(Position, Position.schema)
                 self.register_component(Velocity, Velocity.schema)
@@ -104,11 +101,11 @@ def main():
                 
                 if (aabb := scene.fetch("entity_1", AABB)) is not None:
                         if (position := scene.fetch("entity_1", Position)) is not None:
-                                aabb.move(Vector2D(position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                                aabb.move((position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
                 
                 if (aabb := scene.fetch("entity_2", AABB)) is not None:
                         if (position := scene.fetch("entity_2", Position)) is not None:
-                                aabb.move(Vector2D(position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                                aabb.move((position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
                 pygame.display.flip()
                 clock.tick(60)

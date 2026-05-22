@@ -1,6 +1,115 @@
 import math
+from typing import Tuple, Union
+
+# Type alias for 2D vector as raw tuple
+Vec2 = Tuple[float, float]
+Scalar = Union[int, float]
+
+
+# ------------------------
+# Static Vector Operations
+# ------------------------
+
+def vec_add(a: Vec2, b: Vec2) -> Vec2:
+        """Add two vectors."""
+        return (a[0] + b[0], a[1] + b[1])
+
+
+def vec_sub(a: Vec2, b: Vec2) -> Vec2:
+        """Subtract two vectors."""
+        return (a[0] - b[0], a[1] - b[1])
+
+
+def vec_mul(a: Vec2, scalar: Scalar) -> Vec2:
+        """Multiply vector by scalar."""
+        return (a[0] * scalar, a[1] * scalar)
+
+
+def vec_div(a: Vec2, scalar: Scalar) -> Vec2:
+        """Divide vector by scalar."""
+        return (a[0] / scalar, a[1] / scalar)
+
+
+def vec_dot(a: Vec2, b: Vec2) -> float:
+        """Dot product of two vectors."""
+        return a[0] * b[0] + a[1] * b[1]
+
+
+def vec_cross(a: Vec2, b: Vec2) -> float:
+        """2D cross product (returns scalar z-component)."""
+        return a[0] * b[1] - a[1] * b[0]
+
+
+def vec_cross_scalar(scalar: Scalar, vec: Vec2) -> Vec2:
+        """Cross product of scalar with vector (2D analog of 3D cross product)."""
+        return (-scalar * vec[1], scalar * vec[0])
+
+
+def vec_perpendicular(vec: Vec2) -> Vec2:
+        """Get perpendicular vector (rotated 90 degrees)."""
+        return (-vec[1], vec[0])
+
+
+def vec_magnitude(vec: Vec2) -> float:
+        """Magnitude/length of vector."""
+        return math.sqrt(vec[0] * vec[0] + vec[1] * vec[1])
+
+
+def vec_magnitude_squared(vec: Vec2) -> float:
+        """Squared magnitude (avoids sqrt for comparisons)."""
+        return vec[0] * vec[0] + vec[1] * vec[1]
+
+
+def vec_normalize(vec: Vec2) -> Vec2:
+        """Normalize vector to unit length."""
+        mag = vec_magnitude(vec)
+        if mag == 0:
+                return (0.0, 0.0)
+        return (vec[0] / mag, vec[1] / mag)
+
+
+def vec_distance(a: Vec2, b: Vec2) -> float:
+        """Distance between two vectors."""
+        return vec_magnitude(vec_sub(a, b))
+
+
+def vec_neg(vec: Vec2) -> Vec2:
+        """Negate vector."""
+        return (-vec[0], -vec[1])
+
+
+def vec_abs(vec: Vec2) -> Vec2:
+        """Absolute value of vector components."""
+        return (abs(vec[0]), abs(vec[1]))
+
+
+def vec_lerp(a: Vec2, b: Vec2, t: float) -> Vec2:
+        """Linear interpolation between two vectors."""
+        return (
+                a[0] + (b[0] - a[0]) * t,
+                a[1] + (b[1] - a[1]) * t
+        )
+
+
+def vec_equal(a: Vec2, b: Vec2) -> bool:
+        """Check if two vectors are equal."""
+        return a[0] == b[0] and a[1] == b[1]
+
+
+def vec_to_tuple(vec: Vec2) -> Vec2:
+        """Identity (already a tuple)."""
+        return vec
+
+
+# ------------------------
+# Backward Compatible Class
+# ------------------------
 
 class Vector2D:
+        """
+        Backward-compatible Vector2D class.
+        For performance-critical code, use the static functions above instead.
+        """
         __slots__ = ("x", "y")
 
         def __init__(self, x: float = 0.0, y: float = 0.0):
@@ -11,11 +120,9 @@ class Vector2D:
         # Geometry helpers
         # ------------------------
 
-        def perpendicular(self):
+        def perpendicular(self) -> "Vector2D":
                 return Vector2D(-self.y, self.x)
-        
-        # ---
-        
+
         @staticmethod
         def cross_scalar_vec(scalar: float, vec: "Vector2D") -> "Vector2D":
                 return Vector2D(-scalar * vec.y, scalar * vec.x)
@@ -261,7 +368,7 @@ class Vector2D:
 
         def dot(self, other):
                 return self.x * other.x + self.y * other.y
-        
+
         def cross(self, other):
                 return self.x * other.y - self.y * other.x
 
@@ -284,6 +391,6 @@ class Vector2D:
         @classmethod
         def from_tuple(cls, value):
                 return cls(*value)
-        
+
         def __hash__(self):
                 return hash((self.x, self.y))

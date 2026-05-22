@@ -15,7 +15,6 @@ from gameplay.runtime.quad_tree import QuadTree
 from gameplay.physics.aabb import AABB
 
 
-from gameplay.general.vector2d import Vector2D
 from gameplay.physics.aabb import AABB
 from gameplay.physics.new_force import NewForce
 from gameplay.physics.old_force import OldForce
@@ -33,7 +32,6 @@ from gameplay.systems.runtime_reset import RuntimeReset
 from gameplay.systems.verlet_first import VerletFirst
 from gameplay.systems.verlet_second import VerletSecond
         
-
 def main():
         pygame.init()
 
@@ -41,12 +39,12 @@ def main():
         
         scene = PhysicScene()
         scene.initialize()
-        
+
         polygon = Polygon([
-                Vector2D(-32, -32),
-                Vector2D(32, -32),
-                Vector2D(32, 32),
-                Vector2D(-32, 32)
+                (-32, -32),
+                (32, -32),
+                (32, 32),
+                (-32, 32)
         ])
         
         scene.add_entity(
@@ -80,7 +78,7 @@ def main():
                 pos = scene.fetch("entity_1", Position)
                 rot = scene.fetch("entity_1", Rotation)
                 if all(c is not None for c in [poly, pos, rot]):
-                        poly.rotate(rot['val']).move(Vector2D(pos['x'], pos['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                        poly.rotate(rot['val']).move(pos).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
                 pygame.display.flip()
                 clock.tick(60)

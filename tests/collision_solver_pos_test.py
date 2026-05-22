@@ -2,7 +2,6 @@ import pygame as pygame
 import time
 import random
 
-from gameplay.general.vector2d import Vector2D
 from gameplay.physics.aabb import AABB
 from gameplay.physics.mass import Mass
 from gameplay.physics.new_force import NewForce
@@ -13,15 +12,15 @@ from gameplay.physics.velocity import Velocity
 from gameplay.scenes.physic_scene import PhysicScene
 
 
-def _make_square(size: float) -> list[Vector2D]:
+def _make_square(size: float):
         # local-space square centered at origin
         c = 30
         s = size / 2.0
         return [
-                Vector2D(-s + random.uniform(-c, c), -s + random.uniform(-c, c)),
-                Vector2D(s + random.uniform(-c, c), -s + random.uniform(-c, c)),
-                Vector2D(s + random.uniform(-c, c), s + random.uniform(-c, c)),
-                Vector2D(-s + random.uniform(-c, c), s + random.uniform(-c, c)),
+                (-s + random.uniform(-c, c), -s + random.uniform(-c, c)),
+                (s + random.uniform(-c, c), -s + random.uniform(-c, c)),
+                (s + random.uniform(-c, c), s + random.uniform(-c, c)),
+                (-s + random.uniform(-c, c), s + random.uniform(-c, c)),
         ]
 
 
@@ -80,8 +79,8 @@ def main():
                 poly_b = scene.fetch("poly_b", Polygon)
 
                 if all(c is not None for c in [pos_a, pos_b, poly_a, poly_b]):
-                        moved_a = poly_a.move(Vector2D(pos_a['x'], pos_a['y']))
-                        moved_b = poly_b.move(Vector2D(pos_b['x'], pos_b['y']))
+                        moved_a = poly_a.move(pos_a)
+                        moved_b = poly_b.move(pos_b)
 
                         moved_a.pg_render(window, (255, 255, 255))
                         moved_b.pg_render(window, (255, 255, 255))
@@ -89,7 +88,7 @@ def main():
                         contact_points = scene.narrow_collision_contacts.get(("poly_a", "poly_b"), [])
                         
                         for point in contact_points:
-                                pygame.draw.circle(window, (0, 255, 0), point.to_tuple(), radius = 2)
+                                pygame.draw.circle(window, (0, 255, 0), (int(point[0]), int(point[1])), radius = 2)
                                 
 
                 pygame.display.flip()

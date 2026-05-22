@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from gameplay.general.vector2d import Vector2D
+from gameplay.general.vector2d import Vec2
 from gameplay.systems.system import System
 from gameplay.physics.aabb import AABB
 from gameplay.physics.position import Position
@@ -15,7 +15,7 @@ class BroadPhaseCollision(System):
                 scene.broad_collision_pairs.clear()
 
                 for entity, aabb, position in scene.query(AABB, Position):
-                        world_aabb = aabb.move(Vector2D(position['x'], position['y']))
+                        world_aabb = aabb.move((position['x'], position['y']))
                         
                         possible_collisions = scene.tree.query(world_aabb)
 

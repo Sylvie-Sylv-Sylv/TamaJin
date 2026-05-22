@@ -1,7 +1,7 @@
 import numpy as np
-from gameplay.general.vector2d import Vector2D
 
-class Position(Vector2D):
+class Position:
+        """Physics position component using numpy dtype for buffer alignment."""
         schema = np.dtype([
                 ("x", np.float32),
                 ("y", np.float32)

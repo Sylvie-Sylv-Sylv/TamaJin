@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pygame
 
-from gameplay.general.vector2d import Vector2D
+from gameplay.general.vector2d import Vec2
 
 
 class AABB:
@@ -48,26 +48,26 @@ class AABB:
         # ------------------------
 
         @property
-        def position(self) -> Vector2D:
-                return Vector2D(self.x, self.y)
+        def position(self) -> Vec2:
+                return (self.x, self.y)
 
         @position.setter
-        def position(self, value: Vector2D):
-                self.x = value.x
-                self.y = value.y
+        def position(self, value: Vec2):
+                self.x = value[0]
+                self.y = value[1]
 
         @property
-        def size(self) -> Vector2D:
-                return Vector2D(self.width, self.height)
+        def size(self) -> Vec2:
+                return (self.width, self.height)
 
         @size.setter
-        def size(self, value: Vector2D):
-                self.width = value.x
-                self.height = value.y
+        def size(self, value: Vec2):
+                self.width = value[0]
+                self.height = value[1]
 
         @property
-        def center(self) -> Vector2D:
-                return Vector2D(
+        def center(self) -> Vec2:
+                return (
                         self.x + self.width / 2,
                         self.y + self.height / 2
                 )
@@ -93,41 +93,41 @@ class AABB:
                         and other.bottom <= self.bottom
                 )
 
-        def contains_point(self, point: Vector2D) -> bool:
+        def contains_point(self, point: Vec2) -> bool:
                 return (
-                        self.left <= point.x <= self.right
-                        and self.top <= point.y <= self.bottom
+                        self.left <= point[0] <= self.right
+                        and self.top <= point[1] <= self.bottom
                 )
 
         # ------------------------
         # Transformations
         # ------------------------
 
-        def move(self, offset: Vector2D) -> AABB:
+        def move(self, offset: Vec2) -> AABB:
                 return AABB(
-                        self.x + offset.x,
-                        self.y + offset.y,
+                        self.x + offset[0],
+                        self.y + offset[1],
                         self.width,
                         self.height
                 )
 
-        def move_ip(self, offset: Vector2D):
-                self.x += offset.x
-                self.y += offset.y
+        def move_ip(self, offset: Vec2):
+                self.x += offset[0]
+                self.y += offset[1]
 
-        def expanded(self, amount: Vector2D) -> AABB:
+        def expanded(self, amount: Vec2) -> AABB:
                 return AABB(
-                        self.x - amount.x,
-                        self.y - amount.y,
-                        self.width + amount.x * 2,
-                        self.height + amount.y * 2
+                        self.x - amount[0],
+                        self.y - amount[1],
+                        self.width + amount[0] * 2,
+                        self.height + amount[1] * 2
                 )
         
         def pg_render(self, surface: pygame.Surface, color = (255, 0, 0), **kwargs):
                 pygame.draw.rect(
                         surface,
                         color,
-                        pygame.Rect(self.x, self.y, self.width, self.height),
+                        (float(self.x), float(self.y), float(self.width), float(self.height)),
                         **kwargs
                 )
 

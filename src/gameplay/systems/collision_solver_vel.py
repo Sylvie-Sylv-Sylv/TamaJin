@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-import pygame
+import numpy as np
 
-from gameplay.general.vector2d import Vector2D
+from gameplay.general.vector2d import Vec2, vec_sub, vec_add, vec_mul, vec_div, vec_dot, vec_cross, vec_cross_scalar, vec_normalize, vec_magnitude
 from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.mass import Mass
 from gameplay.physics.polygon import Polygon
@@ -24,28 +24,28 @@ class CollisionSolverVel(System):
                 velo_a: np.void, velo_b: np.void,
                 ang_velo_a: np.void, ang_velo_b: np.void,
                 mass_a: np.void, mass_b: np.void, dt: float,
-                contact: Vector2D, contact_count: int, mtv: Vector2D,
+                contact: Vec2, contact_count: int, mtv: Vec2,
                 restitution: float = 0.2
         ):
                 # OLD ENGINE CONVENTION:
                 # normal points from other -> self
-                normal = (mtv).normalize()
+                normal = vec_normalize(mtv)
 
                 # vectors from centers to contact
-                ra = contact - Vector2D(pos_a['x'], pos_a['y'])
-                rb = contact - Vector2D(pos_b['x'], pos_b['y'])
+                ra = vec_sub(contact, (pos_a['x'], pos_a['y']))
+                rb = vec_sub(contact, (pos_b['x'], pos_b['y']))
 
                 # Correct 2D cross product for tangential velocity: v = ω x r
-                angular_linear_a = Vector2D.cross_scalar_vec(ang_velo_a['val'], ra)
-                angular_linear_b = Vector2D.cross_scalar_vec(ang_velo_b['val'], rb)
+                angular_linear_a = vec_cross_scalar(ang_velo_a['val'], ra)
+                angular_linear_b = vec_cross_scalar(ang_velo_b['val'], rb)
 
                 # velocity at contact
-                vel_a = Vector2D(velo_a['x'], velo_a['y']) + angular_linear_a
-                vel_b = Vector2D(velo_b['x'], velo_b['y']) + angular_linear_b
+                vel_a = vec_add((velo_a['x'], velo_a['y']), angular_linear_a)
+                vel_b = vec_add((velo_b['x'], velo_b['y']), angular_linear_b)
 
-                relative_velocity = vel_a - vel_b
+                relative_velocity = vec_sub(vel_a, vel_b)
                 
-                vel_along_normal = relative_velocity.dot(normal)
+                vel_along_normal = vec_dot(relative_velocity, normal)
 
                 # Do not apply impulse if bodies are separating or already separated along the normal.
                 if vel_along_normal >= 0.0:
@@ -58,8 +58,8 @@ class CollisionSolverVel(System):
                 inv_inertia_a = 0.0 if inertia_a == 0 else 1.0 / inertia_a
                 inv_inertia_b = 0.0 if inertia_b == 0 else 1.0 / inertia_b
 
-                ra_cross_n = ra.cross(normal)
-                rb_cross_n = rb.cross(normal)
+                ra_cross_n = vec_cross(ra, normal)
+                rb_cross_n = vec_cross(rb, normal)
 
                 denom = (
                         mass_a['inv'] +
@@ -76,25 +76,25 @@ class CollisionSolverVel(System):
                 # slop: Amount of allowed penetration to prevent jitter (0.01 to 0.1)
                 bias_factor = 0.2
                 slop = 0.05
-                penetration_depth = mtv.magnitude
+                penetration_depth = vec_magnitude(mtv)
                 bias = (bias_factor / dt) * max(0.0, penetration_depth - slop)
 
                 j = -( (1 + restitution) * vel_along_normal + bias )
                 j /= denom
                 j /= contact_count
 
-                impulse = normal * j
+                impulse = vec_mul(normal, j)
 
                 # OLD ENGINE linear impulse convention
-                velo_a['x'] += impulse.x * mass_a['inv']
-                velo_a['y'] += impulse.y * mass_a['inv']
+                velo_a['x'] += impulse[0] * mass_a['inv']
+                velo_a['y'] += impulse[1] * mass_a['inv']
 
-                velo_b['x'] -= impulse.x * mass_b['inv']
-                velo_b['y'] -= impulse.y * mass_b['inv']
+                velo_b['x'] -= impulse[0] * mass_b['inv']
+                velo_b['y'] -= impulse[1] * mass_b['inv']
 
                 # OLD ENGINE angular impulse convention
-                ang_velo_a['val'] += ra.cross(impulse) * inv_inertia_a
-                ang_velo_b['val'] -= rb.cross(impulse) * inv_inertia_b
+                ang_velo_a['val'] += vec_cross(ra, impulse) * inv_inertia_a
+                ang_velo_b['val'] -= vec_cross(rb, impulse) * inv_inertia_b
                 
         @staticmethod
         def step(scene : PhysicScene, dt: float = 1.0):

@@ -1,6 +1,6 @@
 from typing import Any
 
-from gameplay.general.vector2d import Vector2D
+from gameplay.general.vector2d import Vec2
 from gameplay.physics.aabb import AABB
 from gameplay.physics.angular_velocity import AngularVelocity
 from gameplay.physics.new_force import NewForce
@@ -32,8 +32,8 @@ class PhysicScene(Scene):
                 self.tree: QuadTree = QuadTree(AABB(0, 0, 800, 800))
                 self.broad_collision_pairs: set[tuple[str, str]] = set()
                 self.narrow_collision_pairs: set[tuple[str, str]] = set() # (entity_a, entity_b)
-                self.narrow_collision_mtv: dict[tuple[str, str], Vector2D] = {} # (entity_a, entity_b) -> MTV vector
-                self.narrow_collision_contacts: dict[tuple[str, str], list[Vector2D]] = {} # (entity_a, entity_b) -> list of contact points
+                self.narrow_collision_mtv: dict[tuple[str, str], Vec2] = {} # (entity_a, entity_b) -> MTV vector
+                self.narrow_collision_contacts: dict[tuple[str, str], list[Vec2]] = {} # (entity_a, entity_b) -> list of contact points
                 
                 self.register_component(Position, Position.schema)
                 self.register_component(Velocity, Velocity.schema)
@@ -71,7 +71,7 @@ class PhysicScene(Scene):
         def add_physics_entity(
                 self, 
                 entity_id: str, 
-                pos: Vector2D, 
+                pos: Vec2, 
                 mass: float = 1.0, 
                 poly: Polygon = None,
                 **kwargs
@@ -81,7 +81,7 @@ class PhysicScene(Scene):
                 buffer-aligned data structures.
                 """
                 components = {
-                        Position: (pos.x, pos.y),
+                        Position: (pos[0], pos[1]),
                         Velocity: kwargs.get('velocity', (0.0, 0.0)),
                         OldForce: (0.0, 0.0),
                         NewForce: (0.0, 0.0),

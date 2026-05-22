@@ -1,4 +1,3 @@
-from gameplay.general.vector2d import Vector2D
 from gameplay.physics.aabb import AABB
 from gameplay.physics.position import Position
 from gameplay.scenes.scene import Scene
@@ -8,4 +7,4 @@ class QuadTreeInserter(System):
         @staticmethod
         def step(scene : Scene):
                 for entity, aabb, position in scene.query(AABB, Position):
-                        scene.tree.insert(entity, aabb.move(Vector2D(position['x'], position['y'])))
+                        scene.tree.insert(entity, aabb.move((position['x'], position['y'])))
