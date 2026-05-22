@@ -57,7 +57,7 @@ def main():
                         Rotation: (0.0,),
                         AngularVelocity: (1.0,),
                         Polygon: polygon,
-                        AABB: polygon.compute_aabb()
+                        AABB: polygon.compute_aabb().to_tuple()
                 }
         )
         

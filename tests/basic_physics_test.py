@@ -45,7 +45,7 @@ class PhysicScene(Scene):
                 self.register_component(Rotation, Rotation.schema)
                 self.register_component(AngularVelocity, AngularVelocity.schema)
                 self.register_component(Mass, Mass.schema)
-                self.register_component(AABB, object)
+                self.register_component(AABB, AABB.schema)
                 self.register_component(Polygon, object)
         
         def step(self, dt: float = 1.0):
@@ -72,7 +72,7 @@ def main():
                 OldForce: (0.0, 0.0),
                 NewForce: (0.0, 0.0),
                 Mass: (1.0, 1.0),
-                AABB: AABB(-32, -32, 64, 64)
+                AABB: (-32, -32, 64, 64)
         })
         scene.add_entity("entity_2", {
                 Position: (100.0, 100.0),
@@ -80,7 +80,7 @@ def main():
                 OldForce: (0.0, 0.0),
                 NewForce: (0.0, 0.0),
                 Mass: (1.0, 1.0),
-                AABB: AABB(-32, -32, 64, 64)
+                AABB: (-32, -32, 64, 64)
         })
         
         clock = pygame.time.Clock()
@@ -101,11 +101,23 @@ def main():
                 
                 if (aabb := scene.fetch("entity_1", AABB)) is not None:
                         if (position := scene.fetch("entity_1", Position)) is not None:
-                                aabb.move((position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                                world_aabb = AABB(
+                                        aabb['x'] + position['x'],
+                                        aabb['y'] + position['y'],
+                                        aabb['width'],
+                                        aabb['height']
+                                )
+                                world_aabb.pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
                 
                 if (aabb := scene.fetch("entity_2", AABB)) is not None:
                         if (position := scene.fetch("entity_2", Position)) is not None:
-                                aabb.move((position['x'], position['y'])).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
+                                world_aabb = AABB(
+                                        aabb['x'] + position['x'],
+                                        aabb['y'] + position['y'],
+                                        aabb['width'],
+                                        aabb['height']
+                                )
+                                world_aabb.pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
                 pygame.display.flip()
                 clock.tick(60)

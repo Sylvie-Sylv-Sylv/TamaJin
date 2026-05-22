@@ -49,7 +49,7 @@ def main():
                         Rotation: (0.0,),
                         AngularVelocity: (0.0,),
                         Mass: (1.0, 1.0),
-                        AABB: poly_a.compute_aabb(),
+                        AABB: poly_a.compute_aabb().to_tuple(),
                         Polygon: poly_a,
                 }
         )
@@ -63,7 +63,7 @@ def main():
                         Rotation: (0.0,),
                         AngularVelocity: (0.1,),
                         Mass: (6.0, 1.0 / 6.0),
-                        AABB: poly_b.compute_aabb(),
+                        AABB: poly_b.compute_aabb().to_tuple(),
                         Polygon: poly_b,
                 }
         )

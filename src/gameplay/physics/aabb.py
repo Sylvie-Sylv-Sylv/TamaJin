@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import numpy as np
 import pygame
 
 from gameplay.general.vector2d import Vec2
 
 
 class AABB:
-        """
-        An Axis-Aligned Bounding Box used for broad-phase collision detection 
-        and spatial partitioning.
-        """
+        """Axis-Aligned Bounding Box used for broad-phase collision detection and spatial partitioning."""
+        schema = np.dtype([
+                ("x", np.float32),
+                ("y", np.float32),
+                ("width", np.float32),
+                ("height", np.float32)
+        ], align=True)
+
         def __init__(
                 self,
                 x: float,
@@ -22,6 +27,10 @@ class AABB:
 
                 self.width = width
                 self.height = height
+
+        def to_tuple(self) -> tuple:
+                """Convert to tuple for numpy array storage."""
+                return (self.x, self.y, self.width, self.height)
 
         # ------------------------
         # Edge Properties

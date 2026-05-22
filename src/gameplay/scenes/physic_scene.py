@@ -42,7 +42,7 @@ class PhysicScene(Scene):
                 self.register_component(Rotation, Rotation.schema)
                 self.register_component(AngularVelocity, AngularVelocity.schema)
                 self.register_component(Mass, Mass.schema)
-                self.register_component(AABB, object)
+                self.register_component(AABB, AABB.schema)
                 self.register_component(Polygon, object)
         
         def step(self, dt: float = 1.0, substeps: int = 4):
@@ -92,9 +92,9 @@ class PhysicScene(Scene):
 
                 if poly:
                         components[Polygon] = poly
-                        components[AABB] = poly.compute_aabb()
+                        components[AABB] = poly.compute_aabb().to_tuple()
                 elif 'aabb' in kwargs:
-                        components[AABB] = kwargs['aabb']
+                        components[AABB] = kwargs['aabb'].to_tuple()
 
                 # Add any additional custom components provided
                 for comp_type, data in kwargs.items():

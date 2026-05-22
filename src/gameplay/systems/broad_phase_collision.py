@@ -15,7 +15,12 @@ class BroadPhaseCollision(System):
                 scene.broad_collision_pairs.clear()
 
                 for entity, aabb, position in scene.query(AABB, Position):
-                        world_aabb = aabb.move((position['x'], position['y']))
+                        world_aabb = AABB(
+                                aabb['x'] + position['x'],
+                                aabb['y'] + position['y'],
+                                aabb['width'],
+                                aabb['height']
+                        )
                         
                         possible_collisions = scene.tree.query(world_aabb)
 

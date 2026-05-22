@@ -45,7 +45,7 @@ def main():
                         OldForce: (0.0, 0.0),
                         NewForce: (0.0, 0.0),
                         Mass: (1.0, 1.0),
-                        AABB: poly_a.compute_aabb(),
+                        AABB: poly_a.compute_aabb().to_tuple(),
                         Polygon: poly_a,
                 }
         )
@@ -57,7 +57,7 @@ def main():
                         OldForce: (0.0, 0.0),
                         NewForce: (0.0, 0.0),
                         Mass: (1.0, 1.0),
-                        AABB: poly_b.compute_aabb(),
+                        AABB: poly_b.compute_aabb().to_tuple(),
                         Polygon: poly_b,
                 }
         )

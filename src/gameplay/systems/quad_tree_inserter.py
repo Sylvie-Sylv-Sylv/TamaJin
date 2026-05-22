@@ -7,4 +7,10 @@ class QuadTreeInserter(System):
         @staticmethod
         def step(scene : Scene):
                 for entity, aabb, position in scene.query(AABB, Position):
-                        scene.tree.insert(entity, aabb.move((position['x'], position['y'])))
+                        world_aabb = AABB(
+                                aabb['x'] + position['x'],
+                                aabb['y'] + position['y'],
+                                aabb['width'],
+                                aabb['height']
+                        )
+                        scene.tree.insert(entity, world_aabb)
