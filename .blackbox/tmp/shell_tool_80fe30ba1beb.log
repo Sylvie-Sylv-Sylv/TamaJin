@@ -1,0 +1,6 @@
+pygame-ce 2.5.6 (SDL 2.32.10, Python 3.13.9)
+PyGame: 2.5.6
+Mixer: (44100, -16, 2)
+Playing 440Hz tone... (loops)
+Controls: SPACE=pause, UP/DOWN=volume, Q=quit
+Done!
