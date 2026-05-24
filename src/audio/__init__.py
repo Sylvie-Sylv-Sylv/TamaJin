@@ -14,7 +14,7 @@ from audio.voice import AudioVoice
 from audio.bus import AudioBus
 from audio.master import MasterBus
 from audio.graph import AudioGraph, create_game_graph
-from audio.device import AudioDevice
+from audio.audio_device import AudioDevice
 from audio.loader import load_clip, load_wav, load_ogg
 from audio.backend import AudioBackend, NullBackend, CallbackBackend, BufferedBackend
 from audio.debug import AudioDebugger, TextDebugger, create_debugger

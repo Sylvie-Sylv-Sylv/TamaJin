@@ -1,0 +1,32 @@
+pygame-ce 2.5.6 (SDL 2.32.10, Python 3.13.9)
+============================================================
+TamaJin Pure Framework Audio Test
+============================================================
+PyGame: 2.5.6
+
+Clips loaded:
+  [0] 88200 frames, 44100Hz
+  [1] 88200 frames, 44100Hz
+  [2] 88200 frames, 44100Hz
+  [3] 88200 frames, 44100Hz
+
+Playing: SFX 440Hz @ 30% (looping)
+Playing: Music 220Hz @ 40% (looping)
+Playing: Voice 880Hz @ 50% (looping)
+
+============================================================
+Controls: [SPACE] toggle  [Q] quit
+============================================================
+
+Frame 60: SFX=1, Music=1, Voice=1
+Frame 120: SFX=1, Music=1, Voice=1
+Frame 180: SFX=1, Music=1, Voice=1
+Frame 240: SFX=1, Music=1, Voice=1
+Frame 300: SFX=1, Music=1, Voice=1
+
+Saving audio to test_output.wav...
+Saved: 153600 frames (3.5s)
+
+============================================================
+Test complete!
+============================================================

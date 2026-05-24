@@ -7,7 +7,7 @@ changing the core audio system.
 
 from abc import ABC, abstractmethod
 import numpy as np
-from typing import Callable, Optional, List
+from typing import Callable, List, Optional
 
 
 class AudioBackend(ABC):
@@ -197,16 +197,153 @@ class PyGameBackend(AudioBackend):
 
 
 class SoundDeviceBackend(AudioBackend):
-    """sounddevice library backend (placeholder)."""
+    """sounddevice library backend for low-latency audio playback."""
     
-    def __init__(self, sample_rate: int = 44100, channels: int = 2):
-        raise NotImplementedError("sounddevice backend requires sounddevice")
+    def __init__(
+        self,
+        sample_rate: int = 44100,
+        channels: int = 2,
+        blocksize: int = 512,
+        device: Optional[int] = None
+    ) -> None:
+        """Create a SoundDeviceBackend.
+        
+        Args:
+            sample_rate: output sample rate
+            channels: number of output channels
+            blocksize: frames per block
+            device: audio device index (None = default)
+        """
+        import sounddevice as sd
+        self._sd = sd
+        self._sample_rate = sample_rate
+        self._channels = channels
+        self._blocksize = blocksize
+        self._device = device
+        self._active = True
+        self._stream: Optional[sd.OutputStream] = None
+        self._queue: List[np.ndarray] = []
+        self._lock = __import__('threading').Lock()
+        
+        # Start audio stream
+        self._stream = sd.OutputStream(
+            samplerate=sample_rate,
+            channels=channels,
+            blocksize=blocksize,
+            device=device,
+            callback=self._audio_callback,
+            finished_callback=None
+        )
+        self._stream.start()
+    
+    def _audio_callback(
+        self,
+        outdata: np.ndarray,
+        frames: int,
+        time_info,
+        status: "sd.CallbackFlags"
+    ) -> None:
+        """Audio stream callback."""
+        if status:
+            print(f"Audio callback status: {status}")
+        
+        with self._lock:
+            if self._queue:
+                data = self._queue.pop(0)
+                # Ensure correct shape
+                if len(data) >= frames:
+                    outdata[:] = data[:frames]
+                else:
+                    outdata[:len(data)] = data
+                    outdata[len(data):] = 0
+            else:
+                outdata.fill(0)
+                # Debug: print when queue is empty
+                # print(f"  Callback: queue empty, filling with zeros")
     
     def submit(self, buffer: np.ndarray) -> None:
-        pass
+        """Queue audio buffer for playback."""
+        if not self._active:
+            return
+        
+        with self._lock:
+            self._queue.append(buffer.copy())
+            
+            # Limit queue size to prevent memory issues
+            if len(self._queue) > 100:
+                self._queue.pop(0)
     
     def is_active(self) -> bool:
-        return False
+        return self._active and (self._stream is not None and self._stream.active)
     
     def close(self) -> None:
-        pass
+        self._active = False
+        if self._stream:
+            self._stream.stop()
+            self._stream.close()
+            self._stream = None
+        self._queue.clear()
+
+
+class WinsoundBackend(AudioBackend):
+    """Winsound backend for Windows audio playback."""
+    
+    def __init__(self) -> None:
+        import winsound
+        self._winsound = winsound
+        self._active = True
+        self._buffer: Optional[np.ndarray] = None
+    
+    def submit(self, buffer: np.ndarray) -> None:
+        """Accumulate buffer and play when full."""
+        if not self._active:
+            return
+        
+        # Accumulate buffers
+        if self._buffer is None:
+            self._buffer = buffer.copy()
+        else:
+            self._buffer = np.concatenate([self._buffer, buffer.copy()])
+        
+        # Play when we have enough samples (~0.5 seconds = 22050 frames)
+        if len(self._buffer) >= 22050:
+            self._play_buffer()
+            self._buffer = None
+    
+    def _play_buffer(self) -> None:
+        """Play accumulated buffer as WAV."""
+        import tempfile
+        import wave
+        import os
+        
+        if self._buffer is None or len(self._buffer) < 512:
+            return
+        
+        # Convert to int16
+        int16 = (np.clip(self._buffer, -1.0, 1.0) * 32767).astype(np.int16)
+        
+        # Write to temp WAV file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as f:
+            temp_path = f.name
+        
+        try:
+            with wave.open(temp_path, 'w') as wav:
+                wav.setnchannels(2)
+                wav.setsampwidth(2)
+                wav.setframerate(44100)
+                wav.writeframes(int16.tobytes())
+            
+            # Play async
+            self._winsound.PlaySound(temp_path, self._winsound.SND_FILENAME | self._winsound.SND_ASYNC)
+        finally:
+            try:
+                os.unlink(temp_path)
+            except OSError:
+                pass
+    
+    def is_active(self) -> bool:
+        return self._active
+    
+    def close(self) -> None:
+        self._active = False
+        self._buffer = None
