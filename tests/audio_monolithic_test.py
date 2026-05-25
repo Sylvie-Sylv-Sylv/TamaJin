@@ -1,14 +1,27 @@
 import wave
+from audio.audio_bus import AudioBus
+from audio.master_audio_bus import MasterAudioBus
+from audio.root_audio_bus import RootAudioBus
 import numpy
 import miniaudio
 import pygame
 import time
 
-from audio.outmix import Outmix
 from audio.audio_voice import AudioVoice
 from audio.utils import load_ogg
 
-outmix = Outmix()
+sfx_bus = RootAudioBus('sfx_bus')
+music_bus = RootAudioBus('music_bus')
+
+middle_bus = AudioBus('middle_bus', [sfx_bus, music_bus])
+
+master_bus = MasterAudioBus([middle_bus])
+
+playback_device = miniaudio.PlaybackDevice(
+        output_format = miniaudio.SampleFormat.FLOAT32,
+        nchannels = 2,
+        sample_rate = 44100
+)
 
 sword_hit_clip = load_ogg("resources/test_resources/sword_hit_1.ogg")
 
@@ -20,7 +33,9 @@ clock = pygame.time.Clock()
 
 running = True
 
-outmix.play()
+stream = master_bus.generator()
+next(stream)
+playback_device.start(stream)
 
 last_sound_time = time.time()
 
@@ -33,8 +48,8 @@ while running:
 
         # play sound every 3 seconds
 
-        if current_time - last_sound_time >= 3.0:
-                outmix.voices.append(
+        if current_time - last_sound_time >= 2.0:
+                sfx_bus.add_voice(
                         AudioVoice(
                                 sword_hit_clip,
                                 volume = 1.0,
@@ -50,6 +65,6 @@ while running:
 
         clock.tick(60)
 
-outmix.stop()
+playback_device.stop()
 
 pygame.quit()
