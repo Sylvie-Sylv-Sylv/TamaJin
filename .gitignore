@@ -3,3 +3,5 @@ __pycache__/
 *.py[cod]
 # CocoIndex Code (ccc)
 /.cocoindex_code/
+.venv/
+venv/
