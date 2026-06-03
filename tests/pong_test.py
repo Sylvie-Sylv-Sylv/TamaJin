@@ -11,6 +11,8 @@ from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
 from gameplay.scenes.scene import Scene
 from gameplay.systems.system import System
+from gameplay.context.context import Context
+from gameplay.config.config import Config
 
 
 # ============================================================
@@ -59,7 +61,6 @@ class InputSystem(System):
 
 
 class MovementSystem(System):
-
     def step(self, scene, dt=0.0, **kwargs):
         for _, pos, vel in scene.query(Position, Velocity):
             pos["x"] += vel["x"] * dt
@@ -67,7 +68,6 @@ class MovementSystem(System):
 
 
 class PaddleBoundsSystem(System):
-
     def step(self, scene, height=600, **kwargs):
         for entity in ("left_paddle", "right_paddle"):
             pos = scene.fetch(entity, Position)
@@ -164,7 +164,6 @@ class RenderSystem(System):
                 100
             )
             pygame.draw.rect(self.surface, (255, 255, 255), rect)
-
         # Ball
         ball = scene.fetch("ball", Position)
         if ball is not None:
@@ -189,85 +188,86 @@ class RenderSystem(System):
 # OOP ENGINE WRAPPER
 # ============================================================
 
-class PongEngine:
-
+class PongScene(Scene):
     def __init__(self, width=800, height=600):
-        pygame.init()
+        super().__init__("pong", capacity=10)
         self.width = width
         self.height = height
         self.window = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("TamaJin Pong")
-        self.clock = pygame.time.Clock()
+
+        self.register_component(Position, Position.schema)
+        self.register_component(Velocity, Velocity.schema)
+        self.register_component(AABB, AABB.schema)
+        self.register_component(Score, Score.schema)
+
+    def initialize_systems(self, window):
+        self.input_system = InputSystem()
+        self.movement_system = MovementSystem()
+        self.paddle_bounds_system = PaddleBoundsSystem()
+        self.ball_physics_system = BallPhysicsSystem()
+        self.render_system = RenderSystem(window)
+
+    def step(self, dt: float = 1.0, **kwargs):
+        self.input_system.step(self, dt=dt, **kwargs)
+        self.movement_system.step(self, dt=dt, **kwargs)
+        self.paddle_bounds_system.step(self, dt=dt, **kwargs)
+        self.ball_physics_system.step(self, dt=dt, **kwargs)
+        self.render_system.step(self, **kwargs)
+
+
+class PongEngine:
+    def __init__(self, width=800, height=600):
+        pygame.init()
+        self.width = width
+        self.height = height
         self.running = False
 
-        # ECS infrastructure dependencies
-        self.scene = None
-        self.input_system = None
-        self.systems = []
+        self.context = None
 
         self._build_world()
 
     def _build_world(self):
-        # Scene instantiation
-        self.scene = Scene("pong", capacity=10)
-        self.scene.register_component(Position, Position.schema)
-        self.scene.register_component(Velocity, Velocity.schema)
-        self.scene.register_component(AABB, AABB.schema)
-        self.scene.register_component(Score, Score.schema)
-        self.scene.initialize()
+        scene = PongScene(self.width, self.height)
+        scene.initialize()
+        scene.initialize_systems(scene.window)
 
-        # Entity construction
         paddles = {
             "left_paddle": (50, self.height / 2),
             "right_paddle": (750, self.height / 2),
         }
         for name, (x, y) in paddles.items():
-            self.scene.add_entity(name, {
+            scene.add_entity(name, {
                 Position: (x, y),
                 Velocity: (0, 0),
                 AABB: (-10, -50, 20, 100),
             })
 
-        self.scene.add_entity("ball", {
+        scene.add_entity("ball", {
             Position: (self.width / 2, self.height / 2),
             Velocity: (300, 0),
             AABB: (-10, -10, 20, 20),
         })
 
-        self.scene.add_entity("score", {
+        scene.add_entity("score", {
             Score: (0, 0),
         })
 
-        # Systems registration
-        self.input_system = InputSystem()
-        self.systems = [
-            self.input_system,
-            MovementSystem(),
-            PaddleBoundsSystem(),
-            BallPhysicsSystem(),
-            RenderSystem(self.window),
-        ]
+        config = Config(fps=60)
+        self.context = Context(scenes={"pong": scene}, current_scene="pong", config=config)
 
     def run(self):
         self.running = True
 
         while self.running:
-            dt = self.clock.tick(60) / 1000
-
             for event in pygame.event.get():
-                self.input_system.handle_event(event)
+                self.context.scenes["pong"].input_system.handle_event(event)
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.running = False
 
-            for system in self.systems:
-                system.step(
-                    self.scene,
-                    dt=dt,
-                    width=self.width,
-                    height=self.height,
-                )
+            self.context.step()
 
         pygame.quit()
 
