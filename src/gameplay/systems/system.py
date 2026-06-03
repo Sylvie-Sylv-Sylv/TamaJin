@@ -1,6 +1,10 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from abc import abstractmethod
 
-from gameplay.scenes.scene import Scene
+if TYPE_CHECKING:
+        from gameplay.scenes.scene import Scene
 
 class System:
         """

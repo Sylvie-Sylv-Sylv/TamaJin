@@ -21,7 +21,6 @@ from gameplay.config.config import Config
 # ============================================================
 
 class Score:
-
     schema = np.dtype([
         ("left", np.int32),
         ("right", np.int32),
@@ -33,7 +32,6 @@ class Score:
 # ============================================================
 
 class InputSystem(System):
-
     def __init__(self):
         self.keys = set()
 
@@ -43,7 +41,7 @@ class InputSystem(System):
         elif event.type == pygame.KEYUP:
             self.keys.discard(event.key)
 
-    def step(self, scene, speed=400, **kwargs):
+    def step(self, scene, speed = 400, **kwargs):
         controls = {
             "left_paddle": (pygame.K_w, pygame.K_s),
             "right_paddle": (pygame.K_UP, pygame.K_DOWN),
@@ -62,14 +60,14 @@ class InputSystem(System):
 
 
 class MovementSystem(System):
-    def step(self, scene, dt=0.0, **kwargs):
+    def step(self, scene, dt = 0.0, **kwargs):
         for _, pos, vel in scene.query(Position, Velocity):
             pos["x"] += vel["x"] * dt
             pos["y"] += vel["y"] * dt
 
 
 class PaddleBoundsSystem(System):
-    def step(self, scene, height=600, **kwargs):
+    def step(self, scene, height = 600, **kwargs):
         for entity in ("left_paddle", "right_paddle"):
             pos = scene.fetch_component(entity, Position)
             if pos is None:
@@ -78,8 +76,7 @@ class PaddleBoundsSystem(System):
 
 
 class BallPhysicsSystem(System):
-
-    def step(self, scene, width=800, height=600, **kwargs):
+    def step(self, scene: Scene, width = 800, height = 600, **kwargs):
         ball_pos = scene.fetch_component("ball", Position)
         ball_vel = scene.fetch_component("ball", Velocity)
         score = scene.fetch_component("score", Score)
@@ -136,7 +133,6 @@ class BallPhysicsSystem(System):
 
 
 class RenderSystem(System):
-
     def __init__(self, surface):
         self.surface = surface
         self.font = pygame.font.Font(None, 74)
@@ -186,6 +182,10 @@ class RenderSystem(System):
 
 
 # ============================================================
+# MAIN CODE
+# ============================================================
+
+# ============================================================
 # OOP ENGINE WRAPPER
 # ============================================================
 
@@ -193,16 +193,8 @@ class PongScene(Scene):
     def __init__(self, window: pygame.Surface):
         super().__init__("pong", capacity = 10)
 
-        self.register_component(Position, Position.schema)
-        self.register_component(Velocity, Velocity.schema)
-        self.register_component(AABB, AABB.schema)
-        self.register_component(Score, Score.schema)
-        
-        self.register_system(InputSystem())
-        self.register_system(MovementSystem())
-        self.register_system(PaddleBoundsSystem())
-        self.register_system(BallPhysicsSystem())
-        self.register_system(RenderSystem(window))
+        self.register_components([Position, Velocity, AABB, Score])
+        self.register_systems([InputSystem(), MovementSystem(), PaddleBoundsSystem(), BallPhysicsSystem(), RenderSystem(window)])
 
     def step(self, dt: float = 1.0, **kwargs):
         for system in self.systems.values():
@@ -223,26 +215,14 @@ class PongContext(Context):
                 super().init_time_manager()
                 super().init_misc(caption = "Pong - TamaJin ECS Demo")
 
-                paddles = {
+                for name, (x, y) in {
                         "left_paddle": (50, self.config.size[1] / 2),
                         "right_paddle": (750, self.config.size[1] / 2),
-                }
-                for name, (x, y) in paddles.items():
-                        scene.add_entity(name, {
-                                Position: (x, y),
-                                Velocity: (0, 0),
-                                AABB: (-10, -50, 20, 100),
-                        })
+                }.items():
+                        scene.add_entity(name, {Position: (x, y), Velocity: (0, 0), AABB: (-10, -50, 20, 100),})
 
-                scene.add_entity("ball", {
-                        Position: (self.config.size[0] / 2, self.config.size[1] / 2),
-                        Velocity: (300, 0),
-                        AABB: (-10, -10, 20, 20),
-                })
-
-                scene.add_entity("score", {
-                        Score: (0, 0),
-                })
+                scene.add_entity("ball", {Position: (self.config.size[0] / 2, self.config.size[1] / 2), Velocity: (300, 0), AABB: (-10, -10, 20, 20),})
+                scene.add_entity("score", {Score: (0, 0),})
         
         def step(self):
                 for event in pygame.event.get():
