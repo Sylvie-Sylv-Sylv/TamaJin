@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 import pygame
 from gameplay.scenes.scene import Scene
 from gameplay.config.config import Config
-from gameplay.time_manager.time_manager import TimeManager
+from time_manager.time_manager import TimeManager
 
 
 class Context(ABC):

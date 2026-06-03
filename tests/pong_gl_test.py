@@ -12,7 +12,7 @@ from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
 from gameplay.scenes.scene import Scene
 from gameplay.systems.system import System
-from gameplay.context.context import Context
+from context.context import Context
 from gameplay.config.config import Config
 from graphics.vertex import Vertex
 from graphics.mesh import Mesh

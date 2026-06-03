@@ -34,8 +34,8 @@ Usage:
         logger.assert(health > 0, "health should be positive")
 """
 
-from gameplay.logging.levels import Level
-from gameplay.logging.logger import (
+from logging.levels import Level
+from logging.logger import (
         Logger,
         trace,
         debug,
