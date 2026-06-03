@@ -254,7 +254,7 @@ class PongEngine:
         })
 
         config = Config(fps=60)
-        self.context = Context(scenes={"pong": scene}, current_scene="pong", config=config)
+        self.context = Context(scenes = {"pong": scene}, current_scene_id = "pong", config = config)
 
     def run(self):
         self.running = True

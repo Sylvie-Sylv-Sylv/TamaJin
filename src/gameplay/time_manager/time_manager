@@ -1,7 +1,0 @@
-import pygame
-
-class TimeManager:
-        def __init__(self, clock: pygame.time.Clock = None):
-                if clock is None:
-                        clock = pygame.time.Clock()
-                self.clock = clock
