@@ -3,6 +3,8 @@ from typing import TypeVar
 
 import numpy as np
 
+from build.lib.gameplay.systems.system import System
+
 T = TypeVar("T")
 
 class SharedChunkBuffer:
@@ -190,6 +192,8 @@ class Scene:
                         type,
                         np.dtype
                 ] = {}
+                
+                self.systems: dict[str, System] = {}
 
                 self.initialized = False
 
@@ -206,6 +210,9 @@ class Scene:
                 self.pending_components[
                         component_type
                 ] = np.dtype(dtype)
+        
+        def register_system(self, system: System):
+                self.systems[system.__class__.__name__] = system
 
         def initialize(self):
                 # finalize layout and allocate shared memroy
@@ -239,7 +246,7 @@ class Scene:
                 self.entities.remove(entity_id)
                 self.chunk.remove_entity(entity_id)
 
-        def fetch(
+        def fetch_component(
                 self,
                 entity_id: str,
                 component_type: type
@@ -248,6 +255,9 @@ class Scene:
                         entity_id,
                         component_type
                 )
+        
+        def fetch_system(self, system_type: type):
+                return self.systems.get(system_type.__name__)
 
         def query(self, *component_types):
                 yield from self.chunk.query(

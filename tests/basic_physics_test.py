@@ -92,15 +92,15 @@ def main():
 
                 scene.step()
                 
-                if (position := scene.fetch("entity_2", Position)) is not None:
+                if (position := scene.fetch_component("entity_2", Position)) is not None:
                         position['x'] = -math.cos(pygame.time.get_ticks() / 1000.0) * 300 + 100 + 300
                 
                 window.fill((0, 0, 0))
                 
                 scene.tree.pg_render(window,  width = 1)
                 
-                if (aabb := scene.fetch("entity_1", AABB)) is not None:
-                        if (position := scene.fetch("entity_1", Position)) is not None:
+                if (aabb := scene.fetch_component("entity_1", AABB)) is not None:
+                        if (position := scene.fetch_component("entity_1", Position)) is not None:
                                 world_aabb = AABB(
                                         aabb['x'] + position['x'],
                                         aabb['y'] + position['y'],
@@ -109,8 +109,8 @@ def main():
                                 )
                                 world_aabb.pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
                 
-                if (aabb := scene.fetch("entity_2", AABB)) is not None:
-                        if (position := scene.fetch("entity_2", Position)) is not None:
+                if (aabb := scene.fetch_component("entity_2", AABB)) is not None:
+                        if (position := scene.fetch_component("entity_2", Position)) is not None:
                                 world_aabb = AABB(
                                         aabb['x'] + position['x'],
                                         aabb['y'] + position['y'],

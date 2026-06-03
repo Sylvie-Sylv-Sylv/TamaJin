@@ -9,6 +9,7 @@ import pygame
 from gameplay.physics.aabb import AABB
 from gameplay.physics.position import Position
 from gameplay.physics.velocity import Velocity
+from gameplay.scenes import scene
 from gameplay.scenes.scene import Scene
 from gameplay.systems.system import System
 from gameplay.context.context import Context
@@ -49,7 +50,7 @@ class InputSystem(System):
         }
 
         for entity, (up, down) in controls.items():
-            vel = scene.fetch(entity, Velocity)
+            vel = scene.fetch_component(entity, Velocity)
             if vel is None:
                 continue
 
@@ -70,7 +71,7 @@ class MovementSystem(System):
 class PaddleBoundsSystem(System):
     def step(self, scene, height=600, **kwargs):
         for entity in ("left_paddle", "right_paddle"):
-            pos = scene.fetch(entity, Position)
+            pos = scene.fetch_component(entity, Position)
             if pos is None:
                 continue
             pos["y"] = np.clip(pos["y"], 50, height - 50)
@@ -79,9 +80,9 @@ class PaddleBoundsSystem(System):
 class BallPhysicsSystem(System):
 
     def step(self, scene, width=800, height=600, **kwargs):
-        ball_pos = scene.fetch("ball", Position)
-        ball_vel = scene.fetch("ball", Velocity)
-        score = scene.fetch("score", Score)
+        ball_pos = scene.fetch_component("ball", Position)
+        ball_vel = scene.fetch_component("ball", Velocity)
+        score = scene.fetch_component("score", Score)
 
         if ball_pos is None or ball_vel is None:
             return
@@ -99,7 +100,7 @@ class BallPhysicsSystem(System):
 
         # Paddle collision
         for paddle in ("left_paddle", "right_paddle"):
-            pos = scene.fetch(paddle, Position)
+            pos = scene.fetch_component(paddle, Position)
             if pos is None:
                 continue
 
@@ -153,7 +154,7 @@ class RenderSystem(System):
 
         # Paddles
         for entity in ("left_paddle", "right_paddle"):
-            pos = scene.fetch(entity, Position)
+            pos = scene.fetch_component(entity, Position)
             if pos is None:
                 continue
 
@@ -165,7 +166,7 @@ class RenderSystem(System):
             )
             pygame.draw.rect(self.surface, (255, 255, 255), rect)
         # Ball
-        ball = scene.fetch("ball", Position)
+        ball = scene.fetch_component("ball", Position)
         if ball is not None:
             pygame.draw.circle(
                 self.surface,
@@ -175,7 +176,7 @@ class RenderSystem(System):
             )
 
         # Score
-        score = scene.fetch("score", Score)
+        score = scene.fetch_component("score", Score)
         if score is not None:
             for side, x_pos in [("left", 200), ("right", 560)]:
                 text = self.font.render(str(score[side]), True, (255, 255, 255))
@@ -189,89 +190,72 @@ class RenderSystem(System):
 # ============================================================
 
 class PongScene(Scene):
-    def __init__(self, width=800, height=600):
-        super().__init__("pong", capacity=10)
-        self.width = width
-        self.height = height
-        self.window = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("TamaJin Pong")
+    def __init__(self, window: pygame.Surface):
+        super().__init__("pong", capacity = 10)
 
         self.register_component(Position, Position.schema)
         self.register_component(Velocity, Velocity.schema)
         self.register_component(AABB, AABB.schema)
         self.register_component(Score, Score.schema)
-
-    def initialize_systems(self, window):
-        self.input_system = InputSystem()
-        self.movement_system = MovementSystem()
-        self.paddle_bounds_system = PaddleBoundsSystem()
-        self.ball_physics_system = BallPhysicsSystem()
-        self.render_system = RenderSystem(window)
+        
+        self.register_system(InputSystem())
+        self.register_system(MovementSystem())
+        self.register_system(PaddleBoundsSystem())
+        self.register_system(BallPhysicsSystem())
+        self.register_system(RenderSystem(window))
 
     def step(self, dt: float = 1.0, **kwargs):
-        self.input_system.step(self, dt=dt, **kwargs)
-        self.movement_system.step(self, dt=dt, **kwargs)
-        self.paddle_bounds_system.step(self, dt=dt, **kwargs)
-        self.ball_physics_system.step(self, dt=dt, **kwargs)
-        self.render_system.step(self, **kwargs)
+        for system in self.systems.values():
+            system.step(self, dt=dt, **kwargs)
 
+class PongContext(Context):
+        def __init__(self):
+                config = Config(size=(800, 600), fps=60)
+                
+                super().__init__()
+                super().init_window(800, 600)
+                
+                scene = PongScene(self.window)
+                scene.initialize()
+                
+                super().init_scenes({'pong': scene}, 'pong')
+                super().init_config(config)
+                super().init_time_manager()
+                super().init_misc(caption = "Pong - TamaJin ECS Demo")
 
-class PongEngine:
-    def __init__(self, width=800, height=600):
-        pygame.init()
-        self.width = width
-        self.height = height
-        self.running = False
+                paddles = {
+                        "left_paddle": (50, self.config.size[1] / 2),
+                        "right_paddle": (750, self.config.size[1] / 2),
+                }
+                for name, (x, y) in paddles.items():
+                        scene.add_entity(name, {
+                                Position: (x, y),
+                                Velocity: (0, 0),
+                                AABB: (-10, -50, 20, 100),
+                        })
 
-        self.context = None
+                scene.add_entity("ball", {
+                        Position: (self.config.size[0] / 2, self.config.size[1] / 2),
+                        Velocity: (300, 0),
+                        AABB: (-10, -10, 20, 20),
+                })
 
-        self._build_world()
-
-    def _build_world(self):
-        scene = PongScene(self.width, self.height)
-        scene.initialize()
-        scene.initialize_systems(scene.window)
-
-        paddles = {
-            "left_paddle": (50, self.height / 2),
-            "right_paddle": (750, self.height / 2),
-        }
-        for name, (x, y) in paddles.items():
-            scene.add_entity(name, {
-                Position: (x, y),
-                Velocity: (0, 0),
-                AABB: (-10, -50, 20, 100),
-            })
-
-        scene.add_entity("ball", {
-            Position: (self.width / 2, self.height / 2),
-            Velocity: (300, 0),
-            AABB: (-10, -10, 20, 20),
-        })
-
-        scene.add_entity("score", {
-            Score: (0, 0),
-        })
-
-        config = Config(fps=60)
-        self.context = Context(scenes = {"pong": scene}, current_scene_id = "pong", config = config)
-
-    def run(self):
-        self.running = True
-
-        while self.running:
-            for event in pygame.event.get():
-                self.context.scenes["pong"].input_system.handle_event(event)
-                if event.type == pygame.QUIT:
-                    self.running = False
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    self.running = False
-
-            self.context.step()
-
-        pygame.quit()
+                scene.add_entity("score", {
+                        Score: (0, 0),
+                })
+        
+        def step(self):
+                for event in pygame.event.get():
+                        self.current_scene.fetch_system(InputSystem).handle_event(event)
+                        
+                        if event.type == pygame.QUIT:
+                                self.running = False
+                        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                                self.running = False
+                
+                super().step()
 
 
 if __name__ == "__main__":
-    game = PongEngine(width=800, height=600)
-    game.run()
+        ctx = PongContext()
+        ctx.run()

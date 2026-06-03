@@ -98,7 +98,7 @@ for entity, health in scene.query(Health):
 print()
 
 # fetch single component
-player_pos = scene.fetch(
+player_pos = scene.fetch_component(
         "player",
         Position
 )

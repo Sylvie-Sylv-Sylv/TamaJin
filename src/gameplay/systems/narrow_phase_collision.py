@@ -20,17 +20,17 @@ class NarrowPhaseCollision(System):
         @staticmethod
         def step(scene : PhysicScene):
                 for entity_a, entity_b in scene.broad_collision_pairs:
-                        if (polygon_a := scene.fetch(entity_a, Polygon)) is not None \
-                           and (polygon_b := scene.fetch(entity_b, Polygon)) is not None:
+                        if (polygon_a := scene.fetch_component(entity_a, Polygon)) is not None \
+                           and (polygon_b := scene.fetch_component(entity_b, Polygon)) is not None:
                                 moved_a = polygon_a
                                 moved_b = polygon_b
                                 
-                                if (rotation_a := scene.fetch(entity_a, Rotation)) is not None \
-                                   and (rotation_b := scene.fetch(entity_b, Rotation)) is not None:
+                                if (rotation_a := scene.fetch_component(entity_a, Rotation)) is not None \
+                                   and (rotation_b := scene.fetch_component(entity_b, Rotation)) is not None:
                                         moved_a = moved_a.rotate(rotation_a['val'])
                                         moved_b = moved_b.rotate(rotation_b['val'])
-                                if (position_a := scene.fetch(entity_a, Position)) is not None \
-                                   and (position_b := scene.fetch(entity_b, Position)) is not None:
+                                if (position_a := scene.fetch_component(entity_a, Position)) is not None \
+                                   and (position_b := scene.fetch_component(entity_b, Position)) is not None:
                                         moved_a = moved_a.move((position_a['x'], position_a['y']))
                                         moved_b = moved_b.move((position_b['x'], position_b['y']))
 

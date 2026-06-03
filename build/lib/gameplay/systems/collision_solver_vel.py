@@ -99,16 +99,16 @@ class CollisionSolverVel(System):
         @staticmethod
         def step(scene : PhysicScene, dt: float = 1.0):
                 for (entity_a, entity_b) in scene.narrow_collision_pairs:
-                        pos_a = scene.fetch(entity_a, Position)
-                        pos_b = scene.fetch(entity_b, Position)
-                        velo_a = scene.fetch(entity_a, Velocity)
-                        velo_b = scene.fetch(entity_b, Velocity)
-                        ang_velo_a = scene.fetch(entity_a, AngularVelocity)
-                        ang_velo_b = scene.fetch(entity_b, AngularVelocity)
-                        mass_a = scene.fetch(entity_a, Mass)
-                        mass_b = scene.fetch(entity_b, Mass)
-                        poly_a = scene.fetch(entity_a, Polygon)
-                        poly_b = scene.fetch(entity_b, Polygon)
+                        pos_a = scene.fetch_component(entity_a, Position)
+                        pos_b = scene.fetch_component(entity_b, Position)
+                        velo_a = scene.fetch_component(entity_a, Velocity)
+                        velo_b = scene.fetch_component(entity_b, Velocity)
+                        ang_velo_a = scene.fetch_component(entity_a, AngularVelocity)
+                        ang_velo_b = scene.fetch_component(entity_b, AngularVelocity)
+                        mass_a = scene.fetch_component(entity_a, Mass)
+                        mass_b = scene.fetch_component(entity_b, Mass)
+                        poly_a = scene.fetch_component(entity_a, Polygon)
+                        poly_b = scene.fetch_component(entity_b, Polygon)
 
                         components = [pos_a, pos_b, velo_a, velo_b, ang_velo_a, ang_velo_b, mass_a, mass_b, poly_a, poly_b]
                         if any(c is None for c in components):

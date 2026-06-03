@@ -73,10 +73,10 @@ def main():
                 window.fill((0, 0, 0))
                 scene.tree.pg_render(window, width=1)
 
-                pos_a = scene.fetch("poly_a", Position)
-                pos_b = scene.fetch("poly_b", Position)
-                poly_a = scene.fetch("poly_a", Polygon)
-                poly_b = scene.fetch("poly_b", Polygon)
+                pos_a = scene.fetch_component("poly_a", Position)
+                pos_b = scene.fetch_component("poly_b", Position)
+                poly_a = scene.fetch_component("poly_a", Polygon)
+                poly_b = scene.fetch_component("poly_b", Polygon)
 
                 if all(c is not None for c in [pos_a, pos_b, poly_a, poly_b]):
                         moved_a = poly_a.move(pos_a)

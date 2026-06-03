@@ -74,9 +74,9 @@ def main():
                 
                 scene.tree.pg_render(window,  width = 1)
                 
-                poly = scene.fetch("entity_1", Polygon)
-                pos = scene.fetch("entity_1", Position)
-                rot = scene.fetch("entity_1", Rotation)
+                poly = scene.fetch_component("entity_1", Polygon)
+                pos = scene.fetch_component("entity_1", Position)
+                rot = scene.fetch_component("entity_1", Rotation)
                 if all(c is not None for c in [poly, pos, rot]):
                         poly.rotate(rot['val']).move(pos).pg_render(window, color = (255, 0, 0) if ("entity_1", "entity_2") in scene.broad_collision_pairs else (255, 255, 255))
 
