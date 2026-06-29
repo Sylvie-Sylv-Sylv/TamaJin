@@ -7,7 +7,6 @@ from networking.handler import Handler
 from networking.network_object import NetworkObject
 from networking.protocol import Protocol
 from networking.packet import Packet, TimedPacket
-from networking.client import EncodingHandler
 from networking.client_quit_handler import ClientQuitHandler
 from networking.server_quit_handler import ServerQuitHandler
 
@@ -30,7 +29,7 @@ class Server(NetworkObject):
         self.add_handler(ClientQuitHandler)
         
     def remove_client(self, address: tuple):
-        self.clients.pop(address)
+        self.clients.pop(address, None)
     
     def add_handler(self, handler: Handler):
         self.handlers[handler.id] = handler
@@ -59,14 +58,12 @@ class Server(NetworkObject):
             self.clients[address] = client
 
             # Send the encoding
-            Packet(EncodingHandler.id, self.encoding).send(client, self.encoding)
+            Packet(None, self.encoding).send(client, self.encoding)
             
             handle_thread = threading.Thread(target = self._handle_client, kwargs = {'client': client, 'logger': logger})
-            handle_thread.daemon = True
+            handle_thread.start()
             
             self.handle_threads.append(handle_thread)
-            
-            handle_thread.start()
             
             logger.info(f'Authenticated client {address} and sent the encoding used for this network: {self.encoding}.')
     

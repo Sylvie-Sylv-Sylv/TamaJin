@@ -29,7 +29,7 @@ client = Client(AddressFamily.IPv4, Protocol.TCP, ('localhost', 4040))
 client.add_handler(PrintReplyHandler)
 
 try:
-    client.connect(('localhost', 8080))
+    client.connect(('localhost', 8080), logger)
     time.sleep(0.1)
     client.handle(logger)
 
@@ -47,7 +47,6 @@ try:
             time.sleep(1)
 
     periodly_send_thread = threading.Thread(target = periodly_send)
-    periodly_send_thread.daemon = True
     periodly_send_thread.start()
 
     while not client.is_stopping.is_set():

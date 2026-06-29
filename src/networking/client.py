@@ -3,7 +3,6 @@ import threading
 
 from logging.logger import Logger
 from networking.address_family import AddressFamily
-from networking.encoding_handler import EncodingHandler
 from networking.handler import Handler
 from networking.network_object import NetworkObject
 from networking.packet import Packet, TimedPacket
@@ -22,13 +21,12 @@ class Client(NetworkObject):
         
         self.handlers: dict[str, Handler] = {}
         
-        self.add_handler(EncodingHandler)
         self.add_handler(ServerQuitHandler)
     
     def add_handler(self, handler: Handler):
         self.handlers[handler.id] = handler
         
-    def _connect(self, address: tuple, logger: Logger):
+    def _connect(self, address: tuple, logger: Logger = None):
         self.sock.connect(address)
         self.encoding = TimedPacket.recv(self.sock).data
         if logger: logger.info('Connected')
@@ -50,7 +48,6 @@ class Client(NetworkObject):
     
     def handle(self, logger: Logger = None):
         self.handle_thread = threading.Thread(target = self._handle, kwargs = {'logger': logger})
-        self.handle_thread.daemon = True
         self.handle_thread.start()
     
     def stop(self, logger: Logger = None):
@@ -58,6 +55,7 @@ class Client(NetworkObject):
         
         try:
             Packet(ClientQuitHandler.id, None).send(self.sock, encoding = self.encoding)
+            self.sock.shutdown(socket.SHUT_WR)
         except OSError:
             pass
         
