@@ -42,7 +42,7 @@ class JsonCodec:
         return JsonParser(obj).parse_value()
     
     @staticmethod
-    def encode(obj: dict, encoding = 'utf-8'):
+    def encode(obj, encoding = 'utf-8') -> bytes:
         return JsonCodec.obj_to_json(obj).encode(encoding = encoding)
     
     @staticmethod

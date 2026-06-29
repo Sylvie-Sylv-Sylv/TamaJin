@@ -1,0 +1,8 @@
+[Tests][DEBUG] logging_test.py:41: This is a DEBUG message
+[Tests][INFO] logging_test.py:42: This is an INFO message
+[Tests][WARN] logging_test.py:43: This is a WARN message
+[Tests][ERROR] logging_test.py:44: This is an ERROR message
+[Tests][FATAL] logging_test.py:45: This is a FATAL message
+[Tests][DEBUG] logging_test.py:48: Player position: 100
+[Tests][INFO] logging_test.py:49: Loaded 42 assets
+[Tests][ASSERT] logging_test.py:53: ASSERTION FAILED: This SHOULD log: test failed

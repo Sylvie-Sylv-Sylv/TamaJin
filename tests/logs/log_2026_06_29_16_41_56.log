@@ -1,0 +1,8 @@
+[Tests][ERROR] logging_test.py:71: This SHOULD appear (ERROR)
+[Tests][WARN] logging_test.py:75: This SHOULD appear (WARN re-enabled)
+[Tests][DEBUG] logging_test.py:80: This should appear
+[Tests][DEBUG] logging_test.py:92: Category should be 'Tests'
+[Tests][DEBUG] logging_test.py:105: Thread 0 message 0
+[Tests][DEBUG] logging_test.py:105: Thread 1 message 0
+[Tests][DEBUG] logging_test.py:105: Thread 0 message 1
+[Tests][DEBUG] logging_test.py:105: Thread 1 message 1
