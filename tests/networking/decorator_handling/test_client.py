@@ -2,6 +2,8 @@ import socket
 import sys
 import os
 
+from networking.network_object import NetworkObject
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
@@ -10,7 +12,7 @@ import threading
 
 from logging.levels import Level
 from logging.logger import Logger
-from networking.packet import Packet
+from networking.packet import Packet, TimedPacket
 from networking.client import Client
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
@@ -26,7 +28,9 @@ logger.initialize(
 
 client = Client(AddressFamily.IPv4, Protocol.TCP)
 
-client.add_handler(PrintReplyHandler)
+@client.handler('print_reply_handler')
+def print_reply_handler(self: NetworkObject, sender: socket.socket, data: TimedPacket, logger: Logger = None):
+    if logger: logger.info(f'Received reply: {data.data}')
 
 try:
     client.connect(('localhost', 8080), logger)

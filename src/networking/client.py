@@ -22,6 +22,19 @@ class Client(NetworkObject):
         self.handlers: dict[str, Handler] = {}
         
         self.add_handler(ServerQuitHandler)
+        
+    # Decorator for handler
+    def handler(self, id: str):
+        def wrapper(func: callable):
+            class NewHandler(Handler):
+                id = id
+                
+                @staticmethod
+                def handle(self: NetworkObject, sender: socket.socket, data: TimedPacket, logger: Logger = None):
+                    func(self, sender, data, logger)
+                    
+            self.handlers[id] = NewHandler
+        return wrapper
     
     def add_handler(self, handler: Handler):
         self.handlers[handler.id] = handler
