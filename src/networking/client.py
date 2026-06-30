@@ -66,6 +66,7 @@ class Client(NetworkObject):
     def stop(self, logger: Logger = None):
         self.is_stopping.set()
         
+        # Send client quit handler if the otherside is still available
         try:
             Packet(ClientQuitHandler.id, None).send(self.sock, encoding = self.encoding)
             self.sock.shutdown(socket.SHUT_WR)

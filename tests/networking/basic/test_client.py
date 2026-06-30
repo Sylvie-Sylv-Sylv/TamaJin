@@ -49,7 +49,7 @@ try:
     periodly_send_thread = threading.Thread(target = periodly_send)
     periodly_send_thread.start()
 
-    while True:
-        pass
+    while not client.is_stopping.is_set():
+        time.sleep(0.1)
 except KeyboardInterrupt:
     client.stop(logger)

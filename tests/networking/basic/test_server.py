@@ -1,6 +1,7 @@
 import socket
 import sys
 import os
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
@@ -27,9 +28,9 @@ server = Server(AddressFamily.IPv4, Protocol.TCP, ('localhost', 8080), encoding 
 server.add_handler(ReplyHandler)
 
 try:
-    server.listen(logger)
-
-    while True:
-        pass
+    server.run(logger)
+    
+    while not server.is_stopping.is_set():
+        time.sleep(0.1)
 except KeyboardInterrupt:
     server.stop(logger)

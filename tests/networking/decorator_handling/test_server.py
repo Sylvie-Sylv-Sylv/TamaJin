@@ -1,6 +1,7 @@
 import socket
 import sys
 import os
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
@@ -31,9 +32,9 @@ def reply_handler(self: NetworkObject, sender: socket.socket, data: TimedPacket,
     logger.info(f'Replied: {reply}')
 
 try:
-    server.listen(logger)
-
-    while True:
-        pass
+    server.run(logger)
+    
+    while not server.is_stopping.is_set():
+        time.sleep(0.1)
 except KeyboardInterrupt:
     server.stop(logger)
