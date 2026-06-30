@@ -3,7 +3,7 @@ import sys
 import os
 
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
 import time
 import threading
@@ -14,7 +14,7 @@ from networking.packet import Packet
 from networking.client import Client
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
-from tests.networking.test_handlers import PrintReplyHandler, ReplyHandler
+from tests.networking.basic.test_handlers import PrintReplyHandler, ReplyHandler
 
 logger = Logger()
 

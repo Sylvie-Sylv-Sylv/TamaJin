@@ -2,7 +2,7 @@ import socket
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../..", "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
 from logging.levels import Level
 from logging.logger import Logger
@@ -12,7 +12,7 @@ from networking.packet import Packet
 from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
-from tests.networking.test_handlers import ReplyHandler
+from tests.networking.basic.test_handlers import ReplyHandler
 
 logger = Logger()
 
