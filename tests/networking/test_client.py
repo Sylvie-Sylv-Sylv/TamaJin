@@ -24,7 +24,7 @@ logger.initialize(
     use_colors = True
 )
 
-client = Client(AddressFamily.IPv4, Protocol.TCP, ('localhost', 4040))
+client = Client(AddressFamily.IPv4, Protocol.TCP)
 
 client.add_handler(PrintReplyHandler)
 

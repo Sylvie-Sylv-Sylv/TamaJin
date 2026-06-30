@@ -11,7 +11,7 @@ from networking.client_quit_handler import ClientQuitHandler
 from networking.server_quit_handler import ServerQuitHandler
 
 class Client(NetworkObject):
-    def __init__(self, address_family: AddressFamily, protocol: Protocol, address: tuple):
+    def __init__(self, address_family: AddressFamily, protocol: Protocol):
         self.is_stopping = threading.Event()
         
         self.sock = socket.socket(
