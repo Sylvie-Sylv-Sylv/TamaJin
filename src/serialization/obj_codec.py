@@ -2,23 +2,27 @@ from encodings.base64_codec import Codec
 
 from serialization.codecs import Codecs
 
+import serialization.np_dtype_codec
+
 
 class ObjTypeRegistry:
     types = {}
     
+    # Decorator for registering
     @classmethod
-    def register(cls, registered_type):
-        cls.types[registered_type.__name__] = registered_type
-        return registered_type
+    def register(cls, obj_type: type):
+        cls.types[obj_type.__name__] = obj_type
+        return obj_type
 
 class ObjCodec(Codec):
     target_type = object
+    marker = '__class__'
     
     def __init__(self):
         pass
     
-    @staticmethod
-    def serialize(obj: object) -> dict:
+    @classmethod
+    def serialize(cls, obj: object) -> dict:
         if isinstance(obj, (str, int, float, bool)) or obj is None or obj is True or obj is False:
             return obj
 
@@ -28,31 +32,66 @@ class ObjCodec(Codec):
         if isinstance(obj, dict):
             return {k: ObjCodec.serialize(v) for k, v in obj.items()}
 
-        if hasattr(obj, "__dict__"):
-            return {
-                "__class__": obj.__class__.__name__,
-                **{k: ObjCodec.serialize(v) for k, v in obj.__dict__.items()}
-            }
-            
         for codec in Codecs.codecs.values():
             if isinstance(obj, codec.target_type):
                 return codec.encode(obj)
 
+        if hasattr(obj, "__dict__"):
+            if obj.__class__.__name__ not in ObjTypeRegistry.types:
+                raise TypeError(f"Cannot serialize {type(obj)}: class not registered in ObjTypeRegistry. This error is a safety net for safe decoding.")
+
+            return {
+                cls.marker: obj.__class__.__name__,
+                **{k: ObjCodec.serialize(v) for k, v in obj.__dict__.items()}
+            }
+
         raise TypeError(f"Cannot serialize {type(obj)}")
     
-    def encode(self, obj: object) -> dict:
-        data = {}
-        
-        obj_type = type(obj).__name__
-        
-        if obj_type not in ObjTypeRegistry.types:
-            raise ValueError(f'Type {obj_type} is not registered.')
-        
-        data['type'] = obj_type
-        
-        data['data'] = ObjCodec.serialize(obj.__dict__)
+    @staticmethod
+    def encode(obj: object) -> dict:
+        data = ObjCodec.serialize(obj)
         
         return data
 
-    def decode(self, data: dict) -> object:
-        pass
+    @staticmethod
+    def decode(data):
+        if isinstance(data, (str, int, float, bool)) or data is None:
+            return data
+
+        if isinstance(data, list):
+            return [ObjCodec.decode(x) for x in data]
+
+        if isinstance(data, dict):
+            # Custom codec objects
+            for codec in Codecs.codecs.values():
+                if codec.marker in data:
+                    return codec.decode(data)
+
+            # Registered class objects
+            if ObjCodec.marker in data:
+                class_name = data[ObjCodec.marker]
+
+                if class_name not in ObjTypeRegistry.types:
+                    raise TypeError(
+                        f"Cannot decode unknown class {class_name}"
+                    )
+
+                obj_type = ObjTypeRegistry.types[class_name]
+
+                obj = obj_type.__new__(obj_type)
+
+                for k, v in data.items():
+                    if k == ObjCodec.marker:
+                        continue
+
+                    setattr(obj, k, ObjCodec.decode(v))
+
+                return obj
+
+            # Normal dictionary
+            return {
+                k: ObjCodec.decode(v)
+                for k, v in data.items()
+            }
+
+        raise TypeError(f"Cannot decode {type(data)}")

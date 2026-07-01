@@ -1,22 +1,32 @@
-from encodings.base64_codec import Codec
+from serialization.codec import Codec
 
 import numpy
 
 class NPDtypeCodec(Codec):
     target_type = numpy.void
+    marker = 'dtype'
     
     @staticmethod
     def encode(obj : numpy.void):
         result = {}
         
-        for name in obj.dtype.names:
-            result[name] = obj[name]
+        result['dtype'] = obj.dtype.descr
         
-        result['']
+        for name in obj.dtype.names:
+            result[name] = obj[name].item()
         
         return result
     
     @staticmethod
-    def decode(data : dict, component_type : type):
-        dtype = component_type.schema
-        return numpy.array(tuple(data[name] for name in dtype.names), dtype=dtype)
+    def decode(data: dict):
+        dtype = numpy.dtype(data[NPDtypeCodec.marker])
+
+        values = tuple(
+            data[name]
+            for name in dtype.names
+        )
+
+        return numpy.array(
+            [values],
+            dtype=dtype
+        )[0]
