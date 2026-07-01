@@ -1,6 +1,10 @@
+from encodings.base64_codec import Codec
+
 import numpy
 
-class NPDtypeCodec:
+class NPDtypeCodec(Codec):
+    target_type = numpy.void
+    
     @staticmethod
     def encode(obj : numpy.void):
         result = {}
