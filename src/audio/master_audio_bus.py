@@ -4,21 +4,20 @@ import numpy
 
 
 class MasterAudioBus(AudioBus):
-        def __init__(self, childs: list[AudioBus | RootAudioBus | None] = [], volume: float = 1.0, pitch: float = 1.0):
-                super().__init__('master', childs, volume, pitch)
-        
-        def generator(self):
-                frame_count = yield
+    def __init__(
+        self,
+        childs: list[AudioBus | RootAudioBus | None] = [],
+        volume: float = 1.0,
+        pitch: float = 1.0,
+    ):
+        super().__init__("master", childs, volume, pitch)
 
-                while True:
-                        self.mix(frame_count)
+    def generator(self):
+        frame_count = yield
 
-                        output = numpy.clip(
-                                self.buffer,
-                                -1.0,
-                                1.0
-                        )
+        while True:
+            self.mix(frame_count)
 
-                        frame_count = yield output.astype(
-                                numpy.float32
-                        ).tobytes()
+            output = numpy.clip(self.buffer, -1.0, 1.0)
+
+            frame_count = yield output.astype(numpy.float32).tobytes()

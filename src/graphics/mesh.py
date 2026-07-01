@@ -7,7 +7,7 @@ class Mesh:
         ctx: mgl.Context,
         vertices: list,
         program: mgl.Program,
-        render_mode = mgl.TRIANGLES
+        render_mode=mgl.TRIANGLES,
     ):
         """
         :param vertices:
@@ -21,7 +21,7 @@ class Mesh:
         if not vertices:
             raise ValueError("Vertex list cannot be empty.")
 
-        data = b''.join([v.pack() for v in self.vertices])
+        data = b"".join([v.pack() for v in self.vertices])
 
         self.vbo = self.ctx.buffer(data)
 
@@ -35,18 +35,9 @@ class Mesh:
         self.instance_attributes = None
         self.instance_count = 0
 
-        self.vao_content = [
-            (
-                self.vbo,
-                self.format_str,
-                *self.attributes
-            )
-        ]
+        self.vao_content = [(self.vbo, self.format_str, *self.attributes)]
 
-        self.vao = self.ctx.vertex_array(
-            self.program,
-            self.vao_content
-        )
+        self.vao = self.ctx.vertex_array(self.program, self.vao_content)
 
         self.render_mode = render_mode
 
@@ -72,9 +63,7 @@ class Mesh:
         if self.instance_vbo:
             self.instance_vbo.release()
 
-        instance_data = b''.join(
-            [instance.pack() for instance in instances]
-        )
+        instance_data = b"".join([instance.pack() for instance in instances])
 
         self.instance_vbo = self.ctx.buffer(instance_data)
 
@@ -87,22 +76,11 @@ class Mesh:
         self.vao.release()
 
         self.vao_content = [
-            (
-                self.vbo,
-                self.format_str,
-                *self.attributes
-            ),
-            (
-                self.instance_vbo,
-                self.instance_format_str,
-                *self.instance_attributes
-            )
+            (self.vbo, self.format_str, *self.attributes),
+            (self.instance_vbo, self.instance_format_str, *self.instance_attributes),
         ]
 
-        self.vao = self.ctx.vertex_array(
-            self.program,
-            self.vao_content
-        )
+        self.vao = self.ctx.vertex_array(self.program, self.vao_content)
 
     def render(self):
         self.vao.render(self.render_mode)
@@ -111,10 +89,7 @@ class Mesh:
         if not self.instance_vbo:
             raise RuntimeError("No instance buffer set.")
 
-        self.vao.render(
-            self.render_mode,
-            instances=self.instance_count
-        )
+        self.vao.render(self.render_mode, instances=self.instance_count)
 
     def release(self):
         self.vbo.release()

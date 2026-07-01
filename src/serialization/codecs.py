@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 class Codecs:
     codecs = {}
-    
+
     @classmethod
     def register(cls, codec: type[Codec]):
         cls.codecs[codec.target_type] = codec

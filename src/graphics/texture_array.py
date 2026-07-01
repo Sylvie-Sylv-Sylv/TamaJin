@@ -2,18 +2,14 @@ import moderngl as mgl
 from PIL import Image
 
 
-class TextureArray():
+class TextureArray:
     """
     Manages an OpenGL Texture Array (GL_TEXTURE_2D_ARRAY).
-    This allows multiple textures of the same dimension to be stored in a single 
+    This allows multiple textures of the same dimension to be stored in a single
     GPU resource, accessible via an index in shaders to reduce draw calls.
     """
-    def __init__(
-        self,
-        ctx: mgl.Context,
-        textures: dict[str, str],
-        filter: int
-    ):
+
+    def __init__(self, ctx: mgl.Context, textures: dict[str, str], filter: int):
         """
         :param textures:
             {
@@ -52,9 +48,7 @@ class TextureArray():
 
         # Create OpenGL texture array
         self.texture = ctx.texture_array(
-            size=(width, height, len(images)),
-            components=4,
-            data=data
+            size=(width, height, len(images)), components=4, data=data
         )
 
         # Common defaults

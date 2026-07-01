@@ -1,6 +1,7 @@
 from src.graphics.shader_graph.nodes.node import Node
 from src.graphics.shader_graph.vars.var_type import VarType
 
+
 class SetNode(Node):
     def __init__(self, out_var, value):
         super().__init__(VarType.VOID, [value])
@@ -13,4 +14,3 @@ class SetNode(Node):
 
     def emit_object(self):
         return ""
-    
