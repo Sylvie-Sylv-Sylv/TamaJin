@@ -19,7 +19,7 @@ master_bus = MasterAudioBus([middle_bus])
 
 playback_device = miniaudio.PlaybackDevice(
     output_format=miniaudio.SampleFormat.FLOAT32, nchannels=2, sample_rate=44100
-)
+) 
 
 sword_hit_clip = load_ogg("resources/test_resources/sword_hit_1.ogg")
 
