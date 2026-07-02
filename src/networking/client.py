@@ -9,16 +9,16 @@ from networking.packet import Packet, TimedPacket
 from networking.protocol import Protocol
 from networking.client_quit_handler import ClientQuitHandler
 from networking.server_quit_handler import ServerQuitHandler
+from networking.user_record import UserRecord
 
 
 class Client(NetworkObject):
-    def __init__(self, address_family: AddressFamily, protocol: Protocol):
+    def __init__(self, address_family: AddressFamily, protocol: Protocol, user_record: UserRecord):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
 
         self.handlers: dict[str, Handler] = {}
-
         self.add_handler(ServerQuitHandler)
 
     # Decorator for handler

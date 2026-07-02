@@ -4,6 +4,7 @@ import select
 import threading
 import time
 
+from database.database import Database
 from logging.logger import Logger
 from networking.address_family import AddressFamily
 from networking.handler import Handler
@@ -21,20 +22,21 @@ class Server(NetworkObject):
         protocol: Protocol,
         address: tuple,
         encoding: str = "utf-8",
+        database: Database = None
     ):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
-
         self.sock.bind(address)
+        
+        self.clients: dict[tuple, socket.socket] = {}
 
         self.encoding = encoding
 
-        self.clients: dict[tuple, socket.socket] = {}
-
         self.handlers: dict[str, Handler] = {}
-
         self.add_handler(ClientQuitHandler)
+        
+        self.database = database
 
     def add_client(self, sock: socket.socket):
         if sock.fileno() == -1:
