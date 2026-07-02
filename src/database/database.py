@@ -7,29 +7,29 @@ class Database(ABC):
     @abstractmethod
     def connect(self):
         pass
-    
+
     @abstractmethod
     def ensure_connection(self):
         pass
-    
+
     @abstractmethod
     def disconnect(self):
         pass
-    
+
     @abstractmethod
     def initialize(self):
         pass
-    
+
     @abstractmethod
     def reset(self):
         pass
-    
+
     @abstractmethod
     def hard_reset(self):
         pass
-    
+
     @abstractmethod
-    def execute(self, query, params = None):
+    def execute(self, query, params=None):
         pass
 
     @abstractmethod
