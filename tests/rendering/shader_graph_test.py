@@ -18,7 +18,10 @@ add2 = AddNode(add, mul)
 # set fragment output
 set_color = SetNode(v_color, color)
 
-set_position = SetNode(DefinedVar(VarType.VEC4, "gl_Position"), VecNode(add2, FloatConst(0.0), FloatConst(1.0)))
+set_position = SetNode(
+    DefinedVar(VarType.VEC4, "gl_Position"),
+    VecNode(add2, FloatConst(0.0), FloatConst(1.0)),
+)
 
 # ------------------------
 # Buld
@@ -42,10 +45,7 @@ f_color = fragment_builder.add_out(VarType.VEC4, "f_color")
 add = AddNode(v_color, Vec3Const(0.1, 0.1, 0.1))
 
 # vec4(v_color, 1.0)
-final_color = VecNode(
-    add,
-    FloatConst(1.0)
-)
+final_color = VecNode(add, FloatConst(1.0))
 
 set_frag = SetNode(f_color, final_color)
 

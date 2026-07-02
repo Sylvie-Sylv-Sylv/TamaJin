@@ -11,7 +11,10 @@ color = builder.add_in(VarType.VEC3, "in_color")
 
 v_color = builder.add_out(VarType.VEC3, "v_color")
 
-set_position = SetNode(DefinedVar(VarType.VEC4, "gl_Position"), VecNode(position, FloatConst(0.0), FloatConst(1.0)))
+set_position = SetNode(
+    DefinedVar(VarType.VEC4, "gl_Position"),
+    VecNode(position, FloatConst(0.0), FloatConst(1.0)),
+)
 
 set_color = SetNode(v_color, color)
 # ------------------------
@@ -33,7 +36,9 @@ v_color = fragment_builder.add_in(VarType.VEC3, "v_color")
 
 f_color = fragment_builder.add_out(VarType.VEC4, "f_color")
 
-set_frag = SetNode(DefinedVar(VarType.VEC4, "f_color"), VecNode(v_color, FloatConst(1.0)))
+set_frag = SetNode(
+    DefinedVar(VarType.VEC4, "f_color"), VecNode(v_color, FloatConst(1.0))
+)
 
 # ------------------------
 # Buld

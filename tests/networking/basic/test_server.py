@@ -17,19 +17,15 @@ from tests.networking.basic.test_handlers import ReplyHandler
 
 logger = Logger()
 
-logger.initialize(
-    min_level = Level.DEBUG,
-    console_output = True,
-    use_colors = True
-)
+logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
-server = Server(AddressFamily.IPv4, Protocol.TCP, ('localhost', 8080), encoding = 'utf-8')
+server = Server(AddressFamily.IPv4, Protocol.TCP, ("localhost", 8080), encoding="utf-8")
 
 server.add_handler(ReplyHandler)
 
 try:
     server.run(logger)
-    
+
     while not server.is_stopping.is_set():
         time.sleep(0.1)
 except KeyboardInterrupt:

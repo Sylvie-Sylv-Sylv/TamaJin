@@ -11,7 +11,9 @@ def main():
     if sys.platform == "darwin":
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(
+            pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE
+        )
         pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
     pg.display.set_mode((800, 600), pg.OPENGL | pg.DOUBLEBUF)
@@ -39,9 +41,13 @@ def main():
     )
 
     vertices = [
-        Vertex(prog, in_vert=[ 0.0,  0.5], in_color=[1.0, 0.0, 0.0]), # Top Red
-        Vertex(prog, in_vert=[-0.5, -0.5], in_color=[0.0, 1.0, 0.0]), # Bottom-Left Green
-        Vertex(prog, in_vert=[ 0.5, -0.5], in_color=[0.0, 0.0, 1.0]), # Bottom-Right Blue
+        Vertex(prog, in_vert=[0.0, 0.5], in_color=[1.0, 0.0, 0.0]),  # Top Red
+        Vertex(
+            prog, in_vert=[-0.5, -0.5], in_color=[0.0, 1.0, 0.0]
+        ),  # Bottom-Left Green
+        Vertex(
+            prog, in_vert=[0.5, -0.5], in_color=[0.0, 0.0, 1.0]
+        ),  # Bottom-Right Blue
     ]
 
     mesh = Mesh(ctx, vertices, prog)
@@ -61,6 +67,7 @@ def main():
         clock.tick(60)
 
     pg.quit()
+
 
 if __name__ == "__main__":
     main()

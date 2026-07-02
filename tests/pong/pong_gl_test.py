@@ -22,16 +22,21 @@ from graphics.mesh import Mesh
 # COMPONENTS
 # ============================================================
 
+
 class Score:
-    schema = np.dtype([
-        ("left", np.int32),
-        ("right", np.int32),
-    ], align=True)
+    schema = np.dtype(
+        [
+            ("left", np.int32),
+            ("right", np.int32),
+        ],
+        align=True,
+    )
 
 
 # ============================================================
 # SYSTEMS
 # ============================================================
+
 
 class InputSystem(System):
     def __init__(self):
@@ -55,9 +60,8 @@ class InputSystem(System):
                 continue
 
             vel["x"] = 0
-            vel["y"] = (
-                (speed if up in self.keys else 0) +
-                (-speed if down in self.keys else 0)
+            vel["y"] = (speed if up in self.keys else 0) + (
+                -speed if down in self.keys else 0
             )
 
 
@@ -138,6 +142,7 @@ class BallPhysicsSystem(System):
 # RENDER SYSTEM - Step 2: Render ball and paddles
 # ============================================================
 
+
 class GLRenderSystem(System):
     def __init__(self, ctx: mgl.Context, prog: mgl.Program, width: int, height: int):
         self.ctx = ctx
@@ -156,12 +161,12 @@ class GLRenderSystem(System):
         vertices = [
             # Triangle 1
             Vertex(prog, in_pos=[-0.02, -0.1], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[-0.02,  0.1], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.02, -0.1], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[-0.02, 0.1], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.02, -0.1], in_color=[1.0, 1.0, 1.0]),
             # Triangle 2
-            Vertex(prog, in_pos=[-0.02,  0.1], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.02,  0.1], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.02, -0.1], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[-0.02, 0.1], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.02, 0.1], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.02, -0.1], in_color=[1.0, 1.0, 1.0]),
         ]
         return Mesh(ctx, vertices, prog, mgl.TRIANGLES)
 
@@ -169,11 +174,11 @@ class GLRenderSystem(System):
         """Ball as a small quad."""
         vertices = [
             Vertex(prog, in_pos=[-0.015, -0.015], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[-0.015,  0.015], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.015, -0.015], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[-0.015,  0.015], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.015,  0.015], in_color=[1.0, 1.0, 1.0]),
-            Vertex(prog, in_pos=[ 0.015, -0.015], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[-0.015, 0.015], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.015, -0.015], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[-0.015, 0.015], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.015, 0.015], in_color=[1.0, 1.0, 1.0]),
+            Vertex(prog, in_pos=[0.015, -0.015], in_color=[1.0, 1.0, 1.0]),
         ]
         return Mesh(ctx, vertices, prog, mgl.TRIANGLES)
 
@@ -182,7 +187,9 @@ class GLRenderSystem(System):
         vertices = []
         for y in np.arange(-1.0, 1.0, 0.1):
             vertices.append(Vertex(prog, in_pos=[0.0, y], in_color=[0.5, 0.5, 0.5]))
-            vertices.append(Vertex(prog, in_pos=[0.0, y + 0.05], in_color=[0.5, 0.5, 0.5]))
+            vertices.append(
+                Vertex(prog, in_pos=[0.0, y + 0.05], in_color=[0.5, 0.5, 0.5])
+            )
         return Mesh(ctx, vertices, prog, mgl.LINES)
 
     def step(self, scene, **kwargs):
@@ -191,7 +198,7 @@ class GLRenderSystem(System):
         w, h = self.width, self.height
 
         # Draw center line at origin
-        self.prog['u_translate'].value = (0.0, 0.0)
+        self.prog["u_translate"].value = (0.0, 0.0)
         self.line_mesh.render()
 
         # Draw paddles
@@ -202,7 +209,7 @@ class GLRenderSystem(System):
             # Convert to NDC (-1 to 1)
             nx = (pos["x"] / w) * 2 - 1
             ny = (pos["y"] / h) * 2 - 1
-            self.prog['u_translate'].value = (nx, ny)
+            self.prog["u_translate"].value = (nx, ny)
             self.paddle_mesh.render()
 
         # Draw ball
@@ -210,7 +217,7 @@ class GLRenderSystem(System):
         if ball is not None:
             bx = (ball["x"] / w) * 2 - 1
             by = (ball["y"] / h) * 2 - 1
-            self.prog['u_translate'].value = (bx, by)
+            self.prog["u_translate"].value = (bx, by)
             self.ball_mesh.render()
 
         pygame.display.flip()
@@ -219,6 +226,7 @@ class GLRenderSystem(System):
 # ============================================================
 # SCENE
 # ============================================================
+
 
 class PongGLScene(Scene):
     def __init__(self, ctx: mgl.Context, prog: mgl.Program, width: int, height: int):
@@ -251,6 +259,7 @@ class PongGLScene(Scene):
 # CONTEXT
 # ============================================================
 
+
 class PongGLContext(Context):
     def __init__(self):
         pygame.init()
@@ -258,15 +267,21 @@ class PongGLContext(Context):
         if sys.platform == "darwin":
             pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 3)
             pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3)
-            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE)
-            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
+            pygame.display.gl_set_attribute(
+                pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_CORE
+            )
+            pygame.display.gl_set_attribute(
+                pygame.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True
+            )
 
         width, height = 800, 600
         config = Config(size=(width, height), fps=60)
         super().__init__()
 
         # OpenGL mode
-        self.window = pygame.display.set_mode((width, height), pygame.OPENGL | pygame.DOUBLEBUF)
+        self.window = pygame.display.set_mode(
+            (width, height), pygame.OPENGL | pygame.DOUBLEBUF
+        )
         self.ctx = mgl.create_context()
         self.prog = self.ctx.program(
             vertex_shader="""
@@ -294,26 +309,38 @@ class PongGLContext(Context):
         scene.initialize()
 
         # Add entities
-        scene.add_entity("left_paddle", {
-            Position: (50, height / 2),
-            Velocity: (0, 0),
-            AABB: (-10, -50, 20, 100),
-        })
-        scene.add_entity("right_paddle", {
-            Position: (750, height / 2),
-            Velocity: (0, 0),
-            AABB: (-10, -50, 20, 100),
-        })
-        scene.add_entity("ball", {
-            Position: (width / 2, height / 2),
-            Velocity: (300, 0),
-            AABB: (-10, -10, 20, 20),
-        })
-        scene.add_entity("score", {
-            Score: (0, 0),
-        })
+        scene.add_entity(
+            "left_paddle",
+            {
+                Position: (50, height / 2),
+                Velocity: (0, 0),
+                AABB: (-10, -50, 20, 100),
+            },
+        )
+        scene.add_entity(
+            "right_paddle",
+            {
+                Position: (750, height / 2),
+                Velocity: (0, 0),
+                AABB: (-10, -50, 20, 100),
+            },
+        )
+        scene.add_entity(
+            "ball",
+            {
+                Position: (width / 2, height / 2),
+                Velocity: (300, 0),
+                AABB: (-10, -10, 20, 20),
+            },
+        )
+        scene.add_entity(
+            "score",
+            {
+                Score: (0, 0),
+            },
+        )
 
-        super().init_scenes({'pong': scene}, 'pong')
+        super().init_scenes({"pong": scene}, "pong")
         super().init_config(config)
         super().init_time_manager()
         super().init_misc(caption="Pong - TamaJin ECS (OpenGL)")

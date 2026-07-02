@@ -64,66 +64,30 @@ def main():
     if sys.platform == "darwin":
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(
+            pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE
+        )
         pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
-    pg.display.set_mode(
-        (800, 600),
-        pg.OPENGL | pg.DOUBLEBUF
-    )
+    pg.display.set_mode((800, 600), pg.OPENGL | pg.DOUBLEBUF)
 
     ctx = mgl.create_context()
 
-    program = ctx.program(
-        vertex_shader=VERTEX_SHADER,
-        fragment_shader=FRAGMENT_SHADER
-    )
+    program = ctx.program(vertex_shader=VERTEX_SHADER, fragment_shader=FRAGMENT_SHADER)
 
     # ==========================================================
     # QUAD MESH
     # ==========================================================
 
     vertices = [
-
         # Triangle 1
-
-        Vertex(
-            program,
-            in_pos=[-0.08, -0.08],
-            in_uv=[0.0, 0.0]
-        ),
-
-        Vertex(
-            program,
-            in_pos=[ 0.08, -0.08],
-            in_uv=[1.0, 0.0]
-        ),
-
-        Vertex(
-            program,
-            in_pos=[ 0.08,  0.08],
-            in_uv=[1.0, 1.0]
-        ),
-
+        Vertex(program, in_pos=[-0.08, -0.08], in_uv=[0.0, 0.0]),
+        Vertex(program, in_pos=[0.08, -0.08], in_uv=[1.0, 0.0]),
+        Vertex(program, in_pos=[0.08, 0.08], in_uv=[1.0, 1.0]),
         # Triangle 2
-
-        Vertex(
-            program,
-            in_pos=[-0.08, -0.08],
-            in_uv=[0.0, 0.0]
-        ),
-
-        Vertex(
-            program,
-            in_pos=[ 0.08,  0.08],
-            in_uv=[1.0, 1.0]
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.08,  0.08],
-            in_uv=[0.0, 1.0]
-        ),
+        Vertex(program, in_pos=[-0.08, -0.08], in_uv=[0.0, 0.0]),
+        Vertex(program, in_pos=[0.08, 0.08], in_uv=[1.0, 1.0]),
+        Vertex(program, in_pos=[-0.08, 0.08], in_uv=[0.0, 1.0]),
     ]
 
     mesh = Mesh(ctx, vertices, program)
@@ -149,13 +113,8 @@ def main():
             tex_index = (x + y) % 3
 
             instances.append(
-
                 Vertex(
-                    program,
-                    is_instance=True,
-
-                    i_pos=[px, py],
-                    i_tex_index=[tex_index]
+                    program, is_instance=True, i_pos=[px, py], i_tex_index=[tex_index]
                 )
             )
 

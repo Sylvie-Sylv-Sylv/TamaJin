@@ -47,20 +47,16 @@ def main():
     if sys.platform == "darwin":
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
-        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE)
+        pg.display.gl_set_attribute(
+            pg.GL_CONTEXT_PROFILE_MASK, pg.GL_CONTEXT_PROFILE_CORE
+        )
         pg.display.gl_set_attribute(pg.GL_CONTEXT_FORWARD_COMPATIBLE_FLAG, True)
 
-    pg.display.set_mode(
-        (800, 600),
-        pg.OPENGL | pg.DOUBLEBUF
-    )
+    pg.display.set_mode((800, 600), pg.OPENGL | pg.DOUBLEBUF)
 
     ctx = mgl.create_context()
 
-    program = ctx.program(
-        vertex_shader=VERTEX_SHADER,
-        fragment_shader=FRAGMENT_SHADER
-    )
+    program = ctx.program(vertex_shader=VERTEX_SHADER, fragment_shader=FRAGMENT_SHADER)
 
     # ==========================================================
     # Texture Array
@@ -70,9 +66,9 @@ def main():
         ctx,
         {
             "test_1": "resources/test-resources/test_1.png",
-            "test_2": "resources/test-resources/test_2.png"
+            "test_2": "resources/test-resources/test_2.png",
         },
-        mgl.NEAREST
+        mgl.NEAREST,
     )
 
     tex_array.use(0)
@@ -86,109 +82,31 @@ def main():
     t2 = tex_array.get_index("test_2")
 
     vertices = [
-
         # ======================================================
         # LEFT QUAD
         # ======================================================
-
-        Vertex(
-            program,
-            in_pos=[-0.9, -0.5],
-            in_uv=[0.0, 0.0],
-            in_tex_index=t1
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.1, -0.5],
-            in_uv=[1.0, 0.0],
-            in_tex_index=t1
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.1, 0.5],
-            in_uv=[1.0, 1.0],
-            in_tex_index=t1
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.9, -0.5],
-            in_uv=[0.0, 0.0],
-            in_tex_index=t1
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.1, 0.5],
-            in_uv=[1.0, 1.0],
-            in_tex_index=t1
-        ),
-
-        Vertex(
-            program,
-            in_pos=[-0.9, 0.5],
-            in_uv=[0.0, 1.0],
-            in_tex_index=t1
-        ),
-
+        Vertex(program, in_pos=[-0.9, -0.5], in_uv=[0.0, 0.0], in_tex_index=t1),
+        Vertex(program, in_pos=[-0.1, -0.5], in_uv=[1.0, 0.0], in_tex_index=t1),
+        Vertex(program, in_pos=[-0.1, 0.5], in_uv=[1.0, 1.0], in_tex_index=t1),
+        Vertex(program, in_pos=[-0.9, -0.5], in_uv=[0.0, 0.0], in_tex_index=t1),
+        Vertex(program, in_pos=[-0.1, 0.5], in_uv=[1.0, 1.0], in_tex_index=t1),
+        Vertex(program, in_pos=[-0.9, 0.5], in_uv=[0.0, 1.0], in_tex_index=t1),
         # ======================================================
         # RIGHT QUAD
         # ======================================================
-
-        Vertex(
-            program,
-            in_pos=[0.1, -0.5],
-            in_uv=[0.0, 0.0],
-            in_tex_index=t2
-        ),
-
-        Vertex(
-            program,
-            in_pos=[0.9, -0.5],
-            in_uv=[1.0, 0.0],
-            in_tex_index=t2
-        ),
-
-        Vertex(
-            program,
-            in_pos=[0.9, 0.5],
-            in_uv=[1.0, 1.0],
-            in_tex_index=t2
-        ),
-
-        Vertex(
-            program,
-            in_pos=[0.1, -0.5],
-            in_uv=[0.0, 0.0],
-            in_tex_index=t2
-        ),
-
-        Vertex(
-            program,
-            in_pos=[0.9, 0.5],
-            in_uv=[1.0, 1.0],
-            in_tex_index=t2
-        ),
-
-        Vertex(
-            program,
-            in_pos=[0.1, 0.5],
-            in_uv=[0.0, 1.0],
-            in_tex_index=t2
-        ),
+        Vertex(program, in_pos=[0.1, -0.5], in_uv=[0.0, 0.0], in_tex_index=t2),
+        Vertex(program, in_pos=[0.9, -0.5], in_uv=[1.0, 0.0], in_tex_index=t2),
+        Vertex(program, in_pos=[0.9, 0.5], in_uv=[1.0, 1.0], in_tex_index=t2),
+        Vertex(program, in_pos=[0.1, -0.5], in_uv=[0.0, 0.0], in_tex_index=t2),
+        Vertex(program, in_pos=[0.9, 0.5], in_uv=[1.0, 1.0], in_tex_index=t2),
+        Vertex(program, in_pos=[0.1, 0.5], in_uv=[0.0, 1.0], in_tex_index=t2),
     ]
 
     # ==========================================================
     # Mesh
     # ==========================================================
 
-    mesh = Mesh(
-        ctx,
-        vertices,
-        program
-    )
+    mesh = Mesh(ctx, vertices, program)
 
     # ==========================================================
     # Main Loop
