@@ -1,6 +1,7 @@
 from src.graphics.shader_graph.vars.var import Var
 from src.graphics.shader_graph.vars.var_type import VarType
 
+
 class Vec3Const(Var):
     def __init__(self, x, y, z):
         super().__init__(VarType.VEC3)
@@ -11,4 +12,3 @@ class Vec3Const(Var):
 
     def emit_object(self):
         return f"vec3({self.x}, {self.y}, {self.z})"
-    

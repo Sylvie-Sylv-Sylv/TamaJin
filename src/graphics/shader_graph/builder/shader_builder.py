@@ -5,19 +5,20 @@ from src.graphics.shader_graph.nodes.node import Node
 # Graph buldar
 # ------------------------
 
+
 class ShaderBuilder:
     def __init__(self):
         self.visited = set()
         self.lines = []
-        
+
         self.ends = []
 
         self.in_vars = []
         self.out_vars = []
 
-    def set_ends(self, ends = []):
+    def set_ends(self, ends=[]):
         self.ends = ends
-        
+
     def add_in(self, type, name):
         var = DefinedVar(type, name)
         self.in_vars.append(var)
@@ -79,4 +80,3 @@ class ShaderBuilder:
         shader += "}"
 
         return shader
-    

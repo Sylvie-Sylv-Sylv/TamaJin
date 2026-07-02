@@ -5,6 +5,7 @@ import uuid
 # Node Segstem
 # ------------------------
 
+
 class Node(Var):
     def __init__(self, type, inputs=[]):
         super().__init__(type)
@@ -17,4 +18,3 @@ class Node(Var):
 
     def emit_object(self):
         return self.id
-    

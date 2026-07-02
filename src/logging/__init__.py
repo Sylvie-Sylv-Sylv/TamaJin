@@ -13,56 +13,56 @@ Features:
 
 Usage:
         from gameplay.logging import logger, Level, initialize
-        
+
         # Initialize with log directory
         initialize(log_dir="logs", min_level=Level.DEBUG)
-        
+
         # Use module-level functions
         debug("player position: {}", x, y)
         warn("collision detected")
         error("failed to load: {}", filename)
-        
+
         # Or use logger instance
         logger = Logger.get_instance()
         logger.debug("message")
-        
+
         # Filtering
         logger.disable("audio")      # Disable audio category
         logger.disable(Level.WARN)  # Disable WARN level globally
-        
+
         # Assertion
         logger.assert(health > 0, "health should be positive")
 """
 
 from logging.levels import Level
 from logging.logger import (
-        Logger,
-        trace,
-        debug,
-        info,
-        warn,
-        error,
-        fatal,
-        assert_,
-        disable,
-        enable,
-        set_verbosity,
-        initialize,
+    Logger,
+    trace,
+    debug,
+    info,
+    warn,
+    error,
+    fatal,
+    assert_,
+    disable,
+    enable,
+    set_verbosity,
+    initialize,
 )
 
 # Re-export for convenience
 __all__ = [
-        "Level",
-        "Logger",
-        "trace",
-        "debug",
-        "info",
-        "warn",
-        "error",
-        "fatal",
-        "assert_",
-        "disable",
-        "enable",
-        "set_verbosity",
-        "initialize",
+    "Level",
+    "Logger",
+    "trace",
+    "debug",
+    "info",
+    "warn",
+    "error",
+    "fatal",
+    "assert_",
+    "disable",
+    "enable",
+    "set_verbosity",
+    "initialize",
 ]

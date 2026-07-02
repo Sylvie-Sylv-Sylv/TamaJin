@@ -3,12 +3,7 @@ import moderngl as mgl
 
 
 class Vertex:
-    def __init__(
-        self,
-        program: mgl.Program,
-        is_instance: bool = False,
-        **kwargs
-    ):
+    def __init__(self, program: mgl.Program, is_instance: bool = False, **kwargs):
         """
         Automatically introspects shader attributes.
 
@@ -58,7 +53,4 @@ class Vertex:
         self.format_str = " ".join(self.format_parts)
 
     def pack(self) -> bytes:
-        return struct.pack(
-            f"{len(self.data_values)}f",
-            *self.data_values
-        )
+        return struct.pack(f"{len(self.data_values)}f", *self.data_values)

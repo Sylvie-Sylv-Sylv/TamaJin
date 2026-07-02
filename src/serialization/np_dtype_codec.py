@@ -2,10 +2,11 @@ from serialization.codec import Codec
 
 import numpy
 
+
 class NPDtypeCodec(Codec):
     target_type = numpy.void
-    marker = 'dtype'
-    
+    marker = "dtype"
+
     @staticmethod
     def encode_dtype(dtype: numpy.dtype) -> list:
         result = []
@@ -20,44 +21,34 @@ class NPDtypeCodec(Codec):
                 result.append([name, str(subdtype)])
 
         return result
-    
+
     @staticmethod
-    def decode_dtype(descr: list, align = False) -> numpy.dtype:
+    def decode_dtype(descr: list, align=False) -> numpy.dtype:
         result = []
 
         for name, subdtype in descr:
             if isinstance(subdtype, list):
-                result.append(
-                    (name, NPDtypeCodec.decode_dtype(subdtype))
-                )
+                result.append((name, NPDtypeCodec.decode_dtype(subdtype)))
             else:
-                result.append(
-                    (name, numpy.dtype(subdtype))
-                )
+                result.append((name, numpy.dtype(subdtype)))
 
-        return numpy.dtype(result, align = align)
-    
+        return numpy.dtype(result, align=align)
+
     @staticmethod
-    def encode(obj : numpy.void):
+    def encode(obj: numpy.void):
         result = {}
-        
-        result['dtype'] = NPDtypeCodec.encode_dtype(obj.dtype)
-        
+
+        result["dtype"] = NPDtypeCodec.encode_dtype(obj.dtype)
+
         for name in obj.dtype.names:
             result[name] = obj[name].item()
-        
+
         return result
-    
+
     @staticmethod
     def decode(data: dict):
         dtype = NPDtypeCodec.decode_dtype(data[NPDtypeCodec.marker])
 
-        values = tuple(
-            data[name]
-            for name in dtype.names
-        )
+        values = tuple(data[name] for name in dtype.names)
 
-        return numpy.array(
-            [values],
-            dtype=dtype
-        )[0]
+        return numpy.array([values], dtype=dtype)[0]
