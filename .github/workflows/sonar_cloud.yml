@@ -19,7 +19,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black
+
+      - name: Check formatting with Black
+        run: black --check src/
 
       - uses: SonarSource/sonarqube-scan-action@v5
         env:
