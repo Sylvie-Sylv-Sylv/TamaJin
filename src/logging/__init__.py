@@ -13,23 +13,23 @@ Features:
 
 Usage:
         from gameplay.logging import logger, Level, initialize
-        
+
         # Initialize with log directory
         initialize(log_dir="logs", min_level=Level.DEBUG)
-        
+
         # Use module-level functions
         debug("player position: {}", x, y)
         warn("collision detected")
         error("failed to load: {}", filename)
-        
+
         # Or use logger instance
         logger = Logger.get_instance()
         logger.debug("message")
-        
+
         # Filtering
         logger.disable("audio")      # Disable audio category
         logger.disable(Level.WARN)  # Disable WARN level globally
-        
+
         # Assertion
         logger.assert(health > 0, "health should be positive")
 """

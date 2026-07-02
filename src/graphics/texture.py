@@ -45,4 +45,7 @@ class Texture:
         to free up GPU memory.
 
         """
+        Releases the OpenGL resources associated with this texture.
+        Should be called when the texture is no longer needed.
+        """
         self.texture.release()
