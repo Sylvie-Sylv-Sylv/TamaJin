@@ -2,9 +2,9 @@ import moderngl as mgl
 import pygame as pg
 import sys
 
-from src.graphics.texture_array import TextureArray
-from src.graphics.vertex import Vertex
-from src.graphics.mesh import Mesh
+from graphics.texture_array import TextureArray
+from graphics.vertex import Vertex
+from graphics.mesh import Mesh
 
 
 VERTEX_SHADER = """

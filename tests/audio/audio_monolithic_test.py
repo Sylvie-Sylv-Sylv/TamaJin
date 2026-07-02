@@ -23,40 +23,41 @@ playback_device = miniaudio.PlaybackDevice(
 
 sword_hit_clip = load_ogg("resources/test_resources/sword_hit_1.ogg")
 
-pygame.init()
+if __name__ == "__main__":
+    pygame.init()
 
-screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((800, 600))
 
-clock = pygame.time.Clock()
+    clock = pygame.time.Clock()
 
-running = True
+    running = True
 
-stream = master_bus.generator()
-next(stream)
-playback_device.start(stream)
+    stream = master_bus.generator()
+    next(stream)
+    playback_device.start(stream)
 
-last_sound_time = time.time()
+    last_sound_time = time.time()
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    current_time = time.time()
+        current_time = time.time()
 
-    # play sound every 3 seconds
+        # play sound every 3 seconds
 
-    if current_time - last_sound_time >= 2.0:
-        sfx_bus.add_voice(AudioVoice(sword_hit_clip, volume=1.0, playing=True))
+        if current_time - last_sound_time >= 2.0:
+            sfx_bus.add_voice(AudioVoice(sword_hit_clip, volume=1.0, playing=True))
 
-        last_sound_time = current_time
+            last_sound_time = current_time
 
-    screen.fill((30, 30, 30))
+        screen.fill((30, 30, 30))
 
-    pygame.display.flip()
+        pygame.display.flip()
 
-    clock.tick(60)
+        clock.tick(60)
 
-playback_device.stop()
+    playback_device.stop()
 
-pygame.quit()
+    pygame.quit()

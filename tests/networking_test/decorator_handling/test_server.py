@@ -5,15 +5,15 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
-from logging.levels import Level
-from logging.logger import Logger
+from diagnostics.levels import Level
+from diagnostics.logger import Logger
 from networking.handler import Handler
 from networking.network_object import NetworkObject
 from networking.packet import Packet, TimedPacket
 from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
-from tests.networking.basic.test_handlers import ReplyHandler
+from networking_test.basic.test_handlers import ReplyHandler
 
 logger = Logger()
 
@@ -31,10 +31,11 @@ def reply_handler(
     logger.info(f"Replied: {reply}")
 
 
-try:
-    server.run(logger)
+if __name__ == "__main__":
+    try:
+        server.run(logger)
 
-    while not server.is_stopping.is_set():
-        time.sleep(0.1)
-except KeyboardInterrupt:
-    server.stop(logger)
+        while not server.is_stopping.is_set():
+            time.sleep(0.1)
+    except KeyboardInterrupt:
+        server.stop(logger)

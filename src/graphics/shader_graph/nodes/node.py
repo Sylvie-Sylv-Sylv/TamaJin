@@ -1,4 +1,4 @@
-from src.graphics.shader_graph.vars.var import Var
+from graphics.shader_graph.vars.var import Var
 import uuid
 
 # ------------------------

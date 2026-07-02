@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
-from logging.levels import Level
+from diagnostics.levels import Level
 from logging.handlers import (
         LogHandler,
         ConsoleHandler,

@@ -2,8 +2,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from logging.levels import Level
-from logging.handlers import (
+from diagnostics.levels import Level
+from diagnostics.handlers import (
     ConsoleHandler,
     FileHandler,
     FilteredHandler,

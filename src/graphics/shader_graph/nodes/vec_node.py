@@ -1,5 +1,5 @@
-from src.graphics.shader_graph.nodes.node import Node
-from src.graphics.shader_graph.vars.var_type import VarType
+from graphics.shader_graph.nodes.node import Node
+from graphics.shader_graph.vars.var_type import VarType
 
 count_to_type = {
     2: VarType.VEC2,
