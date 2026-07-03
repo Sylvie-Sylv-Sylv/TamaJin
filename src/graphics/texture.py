@@ -3,14 +3,14 @@ from PIL import Image
 
 
 class Texture:
-    """ A wrapper for ModernGL texture objects
+    """A wrapper for ModernGL texture objects
     Handles loading from disk via PIL, converting them to the correct format,
     and managing the OpenGL state configuration.
     """
 
     def __init__(self, ctx: mgl.Context, path: str, filter: int):
         """Initializes and uploads a texture to the GPU.
-        
+
         Args:
             ctx (mgl.Context): The active ModernGL context.
             path (str): Filesystem path to the image file.
@@ -40,8 +40,8 @@ class Texture:
 
     def release(self):
         """Releases the OpenGL resources associated with this texture.
-        
-        This should be called explicitly when the texture is no longer needed 
+
+        This should be called explicitly when the texture is no longer needed
         to free up GPU memory.
         """
         self.texture.release()

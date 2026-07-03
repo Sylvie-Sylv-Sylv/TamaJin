@@ -11,7 +11,7 @@ class TextureArray:
 
     Attributes:
         key_to_index (dict[str, int]): Maps texture keys to their corresponding
-            index in the texture array. 
+            index in the texture array.
         texture (mgl.TextureArray): The ModernGL texture array object.
 
     """
@@ -28,7 +28,7 @@ class TextureArray:
                 mgl.LINEAR).
 
         Raises:
-            ValueError: If the `textures` dictionary is empty, or if the provided 
+            ValueError: If the `textures` dictionary is empty, or if the provided
                 images do not all share the exact same dimensions.
 
         """
@@ -74,7 +74,7 @@ class TextureArray:
 
     def get_index(self, key: str) -> int:
         """Returns the index of a texture in the array based on its key.
-        
+
         Args:
             key (str): The string identifier of the texture.
 
@@ -96,7 +96,7 @@ class TextureArray:
     def release(self):
         """Releases the OpenGL resources associated with this texture array.
 
-        This should be called explicitly when the texture array is no longer needed 
+        This should be called explicitly when the texture array is no longer needed
         to free up GPU memory.
         """
         self.texture.release()
