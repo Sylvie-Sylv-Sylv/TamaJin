@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
 from logging.levels import Level
 from logging.logger import Logger
-from networking.handler import Handler
+from networking.handlers.handler import Handler
 from networking.network_object import NetworkObject
 from networking.packet import Packet, TimedPacket
 from networking.server import Server

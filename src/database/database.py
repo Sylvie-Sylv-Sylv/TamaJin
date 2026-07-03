@@ -37,7 +37,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def load(self, obj: Record):
+    def load(self, name: str) -> Record:
         pass
 
     @abstractmethod

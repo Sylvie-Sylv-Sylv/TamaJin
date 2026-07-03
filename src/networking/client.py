@@ -3,12 +3,12 @@ import threading
 
 from logging.logger import Logger
 from networking.address_family import AddressFamily
-from networking.handler import Handler
+from networking.handlers.handler import Handler
 from networking.network_object import NetworkObject
 from networking.packet import Packet, TimedPacket
 from networking.protocol import Protocol
-from networking.client_quit_handler import ClientQuitHandler
-from networking.server_quit_handler import ServerQuitHandler
+from networking.handlers.client_quit_handler import ClientQuitHandler
+from networking.handlers.server_quit_handler import ServerQuitHandler
 from networking.user_record import UserRecord
 
 
@@ -17,6 +17,9 @@ class Client(NetworkObject):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
+        self.user_record = user_record
+        
+        self.encoding = None
 
         self.handlers: dict[str, Handler] = {}
         self.add_handler(ServerQuitHandler)
@@ -46,6 +49,7 @@ class Client(NetworkObject):
     def _connect(self, address: tuple, logger: Logger = None):
         self.sock.connect(address)
         self.encoding = TimedPacket.recv(self.sock).data
+        Packet('register_handler', self.user_record).send(self.sock, encoding = self.encoding)
         if logger:
             logger.info("Connected")
 
