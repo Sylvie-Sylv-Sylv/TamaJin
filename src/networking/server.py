@@ -3,6 +3,7 @@ import socket
 import select
 import threading
 import time
+import struct
 from multipledispatch import dispatch
 
 from database.database import Database
@@ -108,15 +109,36 @@ class Server(NetworkObject):
             # ------------------------
             # Receive data
             # ------------------------
-            data = TimedPacket.recv(client, self.encoding)
 
-            if data.handler in self.handlers:
-                self.handlers[data.handler].handle(self, client, data, logger)
+            try:
+                address = client.getpeername()
+            except OSError:
+                for known_addr, client_info in list(self.clients.items()):
+                    if client_info.sock == client:
+                        self.remove_client(known_addr)
+                continue
+
+            try:
+                data = TimedPacket.recv(client, self.encoding)
+
+                if data.handler in self.handlers:
+                    self.handlers[data.handler].handle(self, client, data, logger)
+                    
+            except (ConnectionResetError, ConnectionAbortedError, EOFError, BrokenPipeError):
+                if logger: 
+                    logger.warn(f"Client {client.getpeername()} disconnected abruptly.")
+                self.remove_client(client.getpeername())
+                
+            except struct.error:
+                if logger: 
+                    logger.warn(f"Received malformed packet/empty bytes from {client.getpeername()}.")
+                self.remove_client(client.getpeername())
+
 
     def _auth_and_acc(self, logger: Logger = None):
         client, address = self.sock.accept()
 
-        self.add_client(client, ClientInfo(client, None, False))
+        self.add_client(client, None)
 
         # Send the encoding
         Packet(None, self.encoding).send(client, self.encoding)

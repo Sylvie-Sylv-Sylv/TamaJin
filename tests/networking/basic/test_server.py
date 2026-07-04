@@ -12,6 +12,8 @@ from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
 from tests.networking.basic.test_handlers import ReplyHandler
+from networking.handlers.register_handler import RegisterHandler
+from networking.handlers.login_handler import LoginHandler
 
 logger = Logger()
 
@@ -29,9 +31,11 @@ server = Server(
 )
 
 server.add_handler(ReplyHandler)
+server.add_handler(RegisterHandler)
+server.add_handler(LoginHandler)
 
 try:
-    server.run(hard_reset_database = True, logger = logger)
+    server.run(hard_reset_database = False, logger = logger)
     
     while not server.is_stopping.is_set():
         time.sleep(0.1)

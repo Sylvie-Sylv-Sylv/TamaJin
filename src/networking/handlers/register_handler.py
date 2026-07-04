@@ -23,17 +23,18 @@ class RegisterHandler(Handler):
         
         if isinstance(network_object, Server):
             if not network_object.database:
-                if logger: logger.warning('No database available for registration.')
+                if logger: logger.warn('No database available for registration.')
                 return
             
             user_record: UserRecord = data.data
             
             if not issubclass(type(user_record), UserRecord):
-                if logger: logger.warning('Invalid user record format.')
+                if logger: logger.warn('Invalid user record format.')
                 return
             
             try: 
                 network_object.database.load(user_record.name)
+                if logger: logger.warn(f"User {user_record.name} already exists.")
             except NoRecordFoundError:
                 network_object.database.save(user_record)
                 
