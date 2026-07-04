@@ -10,8 +10,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 import time
 import threading
 
-from logging.levels import Level
-from logging.logger import Logger
+from diagnostics.levels import Level
+from diagnostics.logger import Logger
 from networking.packet import Packet
 from networking.client import Client
 from networking.address_family import AddressFamily

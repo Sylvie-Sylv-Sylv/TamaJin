@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
-from logging.levels import Level
+from diagnostics.levels import Level
 
 
 # ANSI color codes for terminal output

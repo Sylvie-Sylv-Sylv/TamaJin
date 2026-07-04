@@ -34,8 +34,8 @@ Usage:
         logger.assert(health > 0, "health should be positive")
 """
 
-from logging.levels import Level
-from logging.logger import (
+from diagnostics.levels import Level
+from diagnostics.logger import (
         Logger,
         trace,
         debug,

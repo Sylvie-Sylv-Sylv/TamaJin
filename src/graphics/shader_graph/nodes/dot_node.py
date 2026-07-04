@@ -1,4 +1,4 @@
-from src.graphics.shader_graph.nodes.node import Node
+from graphics.shader_graph.nodes.node import Node
 
 
 class DotNode(Node):

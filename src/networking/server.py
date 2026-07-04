@@ -6,7 +6,7 @@ import time
 from multipledispatch import dispatch
 
 from database.database import Database
-from logging.logger import Logger
+from diagnostics.logger import Logger
 from networking.address_family import AddressFamily
 from networking.client_info import ClientInfo
 from networking.handlers.handler import Handler

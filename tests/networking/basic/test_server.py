@@ -6,8 +6,8 @@ import time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
 from database.sqlite_database import SqliteDatabase
-from logging.levels import Level
-from logging.logger import Logger
+from diagnostics.levels import Level
+from diagnostics.logger import Logger
 from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol

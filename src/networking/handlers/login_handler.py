@@ -9,8 +9,8 @@ from networking.user_record import UserRecord
 from serialization.obj_codec import ObjCodec
 
 
-class RegisterHandler(Handler):
-    id = 'register_handler'
+class LoginHandler(Handler):
+    id = 'login_handler'
     
     @staticmethod
     def handle(
@@ -23,7 +23,7 @@ class RegisterHandler(Handler):
         
         if isinstance(network_object, Server):
             if not network_object.database:
-                if logger: logger.warning('No database available for registration.')
+                if logger: logger.warning('No database available for login.')
                 return
             
             user_record: UserRecord = data.data
@@ -33,11 +33,14 @@ class RegisterHandler(Handler):
                 return
             
             try: 
-                network_object.database.load(user_record.name)
+                stored_user_record: UserRecord = network_object.database.load(user_record.name)
+                
+                if stored_user_record.password == user_record.password:
+                    network_object.clients[sender.getpeername()].user_record = user_record
+                    network_object.clients[sender.getpeername()].authenticated = True
+                    if logger: logger.info(f"Successful login for {user_record.name} at {sender.getpeername()}.")
+                else:
+                    if logger: logger.warning(f"Login failed: Incorrect password for {user_record.name} at {sender.getpeername()}.")
+                
             except NoRecordFoundError:
-                network_object.database.save(user_record)
-                
-                network_object.clients[sender.getpeername()].user_record = user_record
-                network_object.clients[sender.getpeername()].authenticated = True
-                
-                if logger: logger.info(str(network_object.clients[sender.getpeername()]))
+                if logger: logger.warning(f'Login failed: User {user_record.name} does not exist.')

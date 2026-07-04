@@ -1,4 +1,4 @@
-from src.graphics.shader_graph.vars.var_type import VarType
+from graphics.shader_graph.vars.var_type import VarType
 
 
 class Var:
