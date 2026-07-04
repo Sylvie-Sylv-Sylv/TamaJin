@@ -8,7 +8,7 @@ import threading
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from logging import (
+from diagnostics import (
     Logger,
     Level,
     trace,

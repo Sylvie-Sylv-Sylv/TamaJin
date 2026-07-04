@@ -1,5 +1,5 @@
-from src.graphics.shader_graph.vars.var import Var
-from src.graphics.shader_graph.vars.var_type import VarType
+from graphics.shader_graph.vars.var import Var
+from graphics.shader_graph.vars.var_type import VarType
 
 class FloatConst(Var):
     def __init__(self, value):

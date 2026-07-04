@@ -1,5 +1,5 @@
 import moderngl as mgl
-from src.graphics.shader_graph.builder.shader_builder import ShaderBuilder
+from graphics.shader_graph.builder.shader_builder import ShaderBuilder
 
 
 class Program:

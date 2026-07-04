@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from logging.logger import Logger
+from diagnostics.logger import Logger
 from networking.address_family import AddressFamily
 from networking.handler import Handler
 from networking.network_object import NetworkObject
