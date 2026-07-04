@@ -12,7 +12,7 @@ from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
 from tests.networking.basic.test_handlers import ReplyHandler
-
+ 
 logger = Logger()
 
 logger.initialize(
