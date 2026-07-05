@@ -26,20 +26,20 @@ class Server(NetworkObject):
         protocol: Protocol,
         address: tuple,
         encoding: str = "utf-8",
-        database: Database = None
+        database: Database = None,
     ):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
         self.sock.bind(address)
-        
+
         self.clients: dict[tuple, ClientInfo] = {}
 
         self.encoding = encoding
 
         self.handlers: dict[str, Handler] = {}
         self.add_handler(ClientQuitHandler)
-        
+
         self.database = database
 
     def add_client(self, sock: socket.socket, user_record: UserRecord):
@@ -121,17 +121,23 @@ class Server(NetworkObject):
 
                 if data.handler in self.handlers:
                     self.handlers[data.handler].handle(self, client, data, logger)
-                    
-            except (ConnectionResetError, ConnectionAbortedError, EOFError, BrokenPipeError):
-                if logger: 
+
+            except (
+                ConnectionResetError,
+                ConnectionAbortedError,
+                EOFError,
+                BrokenPipeError,
+            ):
+                if logger:
                     logger.warn(f"Client {client.getpeername()} disconnected abruptly.")
                 self.remove_client(client.getpeername())
-                
-            except struct.error:
-                if logger: 
-                    logger.warn(f"Received malformed packet/empty bytes from {client.getpeername()}.")
-                self.remove_client(client.getpeername())
 
+            except struct.error:
+                if logger:
+                    logger.warn(
+                        f"Received malformed packet/empty bytes from {client.getpeername()}."
+                    )
+                self.remove_client(client.getpeername())
 
     def _auth_and_acc(self, logger: Logger = None):
         client, address = self.sock.accept()
@@ -147,9 +153,11 @@ class Server(NetworkObject):
 
     def _run(self, hard_reset_database: bool = False, logger: Logger = None):
         self.database.connect()
-        if not hard_reset_database: self.database.initialize()
-        else: self.database.hard_reset()
-        
+        if not hard_reset_database:
+            self.database.initialize()
+        else:
+            self.database.hard_reset()
+
         self.sock.listen()
 
         logger.info(f"Begin listening for connections.")
@@ -158,7 +166,10 @@ class Server(NetworkObject):
             self._handle(logger)
 
     def run(self, hard_reset_database: bool = False, logger: Logger = None):
-        self.run_thread = threading.Thread(target=self._run, kwargs={'hard_reset_database': hard_reset_database, 'logger': logger})
+        self.run_thread = threading.Thread(
+            target=self._run,
+            kwargs={"hard_reset_database": hard_reset_database, "logger": logger},
+        )
         self.run_thread.start()
 
     def stop(self, logger: Logger = None):
