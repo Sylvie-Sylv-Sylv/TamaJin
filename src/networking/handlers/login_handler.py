@@ -23,13 +23,13 @@ class LoginHandler(Handler):
         
         if isinstance(network_object, Server):
             if not network_object.database:
-                if logger: logger.warn('No database available for login.')
+                if logger: logger.warning('No database available for login.')
                 return
             
             user_record: UserRecord = data.data
             
             if not issubclass(type(user_record), UserRecord):
-                if logger: logger.warn('Invalid user record format.')
+                if logger: logger.warning('Invalid user record format.')
                 return
             
             try: 
@@ -40,7 +40,7 @@ class LoginHandler(Handler):
                     network_object.clients[sender.getpeername()].authenticated = True
                     if logger: logger.info(f"Successful login for {user_record.name} at {sender.getpeername()}.")
                 else:
-                    if logger: logger.warn(f"Login failed: Incorrect password for {user_record.name} at {sender.getpeername()}.")
+                    if logger: logger.warning(f"Login failed: Incorrect password for {user_record.name} at {sender.getpeername()}.")
                 
             except NoRecordFoundError:
-                if logger: logger.warn(f'Login failed: User {user_record.name} does not exist.')
+                if logger: logger.warning(f'Login failed: User {user_record.name} does not exist.')

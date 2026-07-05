@@ -49,7 +49,7 @@ class Client(NetworkObject):
     def _connect(self, address: tuple, logger: Logger = None):
         self.sock.connect(address)
         self.encoding = TimedPacket.recv(self.sock).data
-        # Packet('register_handler', self.user_record).send(self.sock, encoding = self.encoding)
+        Packet('register_handler', self.user_record).send(self.sock, encoding = self.encoding)
         if logger:
             logger.info("Connected")
 
