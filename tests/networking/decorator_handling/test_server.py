@@ -17,23 +17,23 @@ from tests.networking.basic.test_handlers import ReplyHandler
 
 logger = Logger()
 
-logger.initialize(
-    min_level = Level.DEBUG,
-    console_output = True,
-    use_colors = True
-)
+logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
-server = Server(AddressFamily.IPv4, Protocol.TCP, ('localhost', 8080), encoding = 'utf-8')
+server = Server(AddressFamily.IPv4, Protocol.TCP, ("localhost", 8080), encoding="utf-8")
 
-@server.handler('reply_handler')
-def reply_handler(self: NetworkObject, sender: socket.socket, data: TimedPacket, logger: Logger = None):
-    reply = 'Here\'s a reply.'
-    Packet('print_reply_handler', reply).send(sender)
-    logger.info(f'Replied: {reply}')
+
+@server.handler("reply_handler")
+def reply_handler(
+    self: NetworkObject, sender: socket.socket, data: TimedPacket, logger: Logger = None
+):
+    reply = "Here's a reply."
+    Packet("print_reply_handler", reply).send(sender)
+    logger.info(f"Replied: {reply}")
+
 
 try:
     server.run(logger)
-    
+
     while not server.is_stopping.is_set():
         time.sleep(0.1)
 except KeyboardInterrupt:

@@ -12,16 +12,10 @@ from networking.server import Server
 from networking.address_family import AddressFamily
 from networking.protocol import Protocol
 from tests.networking.basic.test_handlers import ReplyHandler
-from networking.handlers.register_handler import RegisterHandler
-from networking.handlers.login_handler import LoginHandler
 
 logger = Logger()
 
-logger.initialize(
-    min_level = Level.DEBUG,
-    console_output = True,
-    use_colors = True
-)
+logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
 server = Server(
     AddressFamily.IPv4, Protocol.TCP,
@@ -31,8 +25,6 @@ server = Server(
 )
 
 server.add_handler(ReplyHandler)
-server.add_handler(RegisterHandler)
-server.add_handler(LoginHandler)
 
 try:
     server.run(hard_reset_database = False, logger = logger)
