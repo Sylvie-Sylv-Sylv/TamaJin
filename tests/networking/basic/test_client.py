@@ -23,11 +23,7 @@ from networking.handlers.login_handler import LoginHandler
 
 logger = Logger()
 
-logger.initialize(
-    min_level = Level.DEBUG,
-    console_output = True,
-    use_colors = True
-)
+logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
 dummy_record = UserRecord('guest', 'Guest', '')
 client = Client(AddressFamily.IPv4, Protocol.TCP, UserRecord('testuser', 'Test User', 'password123'))

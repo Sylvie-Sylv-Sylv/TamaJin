@@ -17,11 +17,7 @@ from networking.handlers.login_handler import LoginHandler
 
 logger = Logger()
 
-logger.initialize(
-    min_level = Level.DEBUG,
-    console_output = True,
-    use_colors = True
-)
+logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
 server = Server(
     AddressFamily.IPv4, Protocol.TCP,
