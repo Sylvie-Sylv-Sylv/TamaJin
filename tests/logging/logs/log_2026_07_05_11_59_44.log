@@ -1,0 +1,10 @@
+[Diagnostics][DEBUG] logger.py:72: This is a DEBUG message
+[Diagnostics][INFO] logger.py:72: This is an INFO message
+[Diagnostics][WARN] logger.py:72: This is a WARN message
+[Diagnostics][ERROR] logger.py:72: This is an ERROR message
+[Diagnostics][FATAL] logger.py:72: This is a FATAL message
+[Diagnostics][DEBUG] logger.py:72: Player position: 100
+[Diagnostics][INFO] logger.py:72: Loaded 42 assets
+[Diagnostics][ASSERT] logger.py:72: ASSERTION FAILED: This SHOULD log: test failed
+[Diagnostics][ERROR] logger.py:72: This SHOULD appear (ERROR)
+[Diagnostics][WARN] logger.py:72: This SHOULD appear (WARN re-enabled)
