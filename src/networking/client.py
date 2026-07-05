@@ -13,12 +13,14 @@ from networking.user_record import UserRecord
 
 
 class Client(NetworkObject):
-    def __init__(self, address_family: AddressFamily, protocol: Protocol, user_record: UserRecord):
+    def __init__(
+        self, address_family: AddressFamily, protocol: Protocol, user_record: UserRecord
+    ):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
         self.user_record = user_record
-        
+
         self.encoding = None
 
         self.handlers: dict[str, Handler] = {}
@@ -49,7 +51,9 @@ class Client(NetworkObject):
     def _connect(self, address: tuple, logger: Logger = None):
         self.sock.connect(address)
         self.encoding = TimedPacket.recv(self.sock).data
-        Packet('register_handler', self.user_record).send(self.sock, encoding = self.encoding)
+        Packet("register_handler", self.user_record).send(
+            self.sock, encoding=self.encoding
+        )
         if logger:
             logger.info("Connected")
 
