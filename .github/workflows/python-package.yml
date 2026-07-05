@@ -1,6 +1,0 @@
-# Workflow disabled by automation on 2026-07-02
-# Original file moved/removed per request; this workflow will no longer run because it has no triggers.
-name: "Python package (disabled)"
-on: []
-
-jobs: {}
