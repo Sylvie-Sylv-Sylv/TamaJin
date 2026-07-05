@@ -39,12 +39,14 @@ class TimedPacket(Packet):
     @staticmethod
     def recv(sock: socket.socket, encoding="utf-8") -> TimedPacket:
         length = struct.unpack("!I", sock.recv(4))[0]
-        decoded = ObjCodec.decode(JsonCodec.decode(obj = sock.recv(length), encoding = encoding))
+        decoded = ObjCodec.decode(
+            JsonCodec.decode(obj=sock.recv(length), encoding=encoding)
+        )
 
         return TimedPacket(
-            timestamp = datetime.datetime.strptime(
+            timestamp=datetime.datetime.strptime(
                 decoded["timestamp"], "%Y-%m-%d %H:%M:%S.%f"
             ),
-            handler = decoded["handler"],
-            data = decoded["data"],
+            handler=decoded["handler"],
+            data=decoded["data"],
         )
