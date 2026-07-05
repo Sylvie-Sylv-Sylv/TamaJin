@@ -2,6 +2,8 @@ import socket
 import sys
 import os
 
+from networking.user_record import UserRecord
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../..", "src"))
 
@@ -20,7 +22,7 @@ logger = Logger()
 
 logger.initialize(min_level=Level.DEBUG, console_output=True, use_colors=True)
 
-client = Client(AddressFamily.IPv4, Protocol.TCP)
+client = Client(AddressFamily.IPv4, Protocol.TCP, UserRecord('testuser', 'Test User', 'password123'))
 
 client.add_handler(PrintReplyHandler)
 

@@ -1,7 +1,7 @@
 import socket
 
 from diagnostics.logger import Logger
-from networking.handler import Handler
+from networking.handlers.handler import Handler
 from networking.network_object import NetworkObject
 from networking.packet import Packet, TimedPacket
 

@@ -6,7 +6,6 @@ from graphics.vertex import Vertex
 from graphics.mesh import Mesh
 from graphics.shader_graph import *
 
-
 def main():
     pg.init()
 
