@@ -11,7 +11,7 @@ class UserRecord(Record):
         self._salt = salt
 
     @property
-    def password_hash(self):        
+    def password_hash(self):
         return self._password_hash
 
     @password_hash.setter
@@ -21,7 +21,7 @@ class UserRecord(Record):
     @property
     def salt(self):
         return self._salt
-    
+
     @salt.setter
     def salt(self, value: bytes):
         self._salt = value
