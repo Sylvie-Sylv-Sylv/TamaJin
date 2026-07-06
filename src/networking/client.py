@@ -10,16 +10,17 @@ from networking.protocol import Protocol
 from networking.handlers.client_quit_handler import ClientQuitHandler
 from networking.handlers.server_quit_handler import ServerQuitHandler
 from networking.user_record import UserRecord
+from networking.auth_payload import AuthPayload
 
 
 class Client(NetworkObject):
     def __init__(
-        self, address_family: AddressFamily, protocol: Protocol, user_record: UserRecord
+        self, address_family: AddressFamily, protocol: Protocol, user_auth: AuthPayload
     ):
         self.is_stopping = threading.Event()
 
         self.sock = socket.socket(address_family.value, protocol.value)
-        self.user_record = user_record
+        self.user_auth = user_auth
 
         self.encoding = None
 
@@ -51,7 +52,7 @@ class Client(NetworkObject):
     def _connect(self, address: tuple, logger: Logger = None):
         self.sock.connect(address)
         self.encoding = TimedPacket.recv(self.sock).data
-        Packet("register_handler", self.user_record).send(
+        Packet("register_handler", self.user_auth).send(
             self.sock, encoding=self.encoding
         )
         if logger:

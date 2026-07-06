@@ -7,6 +7,9 @@ from networking.network_object import NetworkObject
 from networking.packet import TimedPacket
 from networking.user_record import UserRecord
 from serialization.obj_codec import ObjCodec
+from networking.auth_payload import AuthPayload
+
+from hashing.sha256 import SHA256
 
 
 class RegisterHandler(Handler):
@@ -27,21 +30,23 @@ class RegisterHandler(Handler):
                     logger.warn("No database available for registration.")
                 return
 
-            user_record: UserRecord = data.data
+            user_auth: AuthPayload = data.data
 
-            if not issubclass(type(user_record), UserRecord):
+            if not issubclass(type(user_auth), AuthPayload):
                 if logger:
                     logger.warn("Invalid user record format.")
                 return
 
             try:
-                network_object.database.load(user_record.name)
+                network_object.database.load(user_auth.name)
                 if logger:
-                    logger.warn(f"User {user_record.name} already exists.")
+                    logger.warn(f"User {user_auth.name} already exists.")
             except NoRecordFoundError:
-                network_object.database.save(user_record)
+                hash, salt = SHA256().hash_with_salt(user_auth.password)
+                user_record_save = UserRecord(user_auth.name, user_auth.display_name, hash, salt)
+                network_object.database.save(user_record_save)
 
-                network_object.clients[sender.getpeername()].user_record = user_record
+                network_object.clients[sender.getpeername()].user_record = user_record_save
                 network_object.clients[sender.getpeername()].authenticated = True
 
                 if logger:

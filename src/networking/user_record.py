@@ -2,11 +2,11 @@ from database.record import Record
 
 
 class UserRecord(Record):
-    def __init__(self, name: str, username: str = None, password_hash: str = None, salt: bytes = None):
+    def __init__(self, name: str, display_name: str = None, password_hash: str = None, salt: bytes = None):
         super().__init__(name)
 
         self.name = name
-        self.username = username
+        self.display_name = display_name
         self._password_hash = password_hash
         self._salt = salt
 

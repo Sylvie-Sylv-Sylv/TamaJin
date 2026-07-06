@@ -37,6 +37,9 @@ class ObjCodec(Codec):
 
         if isinstance(obj, dict):
             return {k: ObjCodec.serialize(v) for k, v in obj.items()}
+        
+        if isinstance(obj, bytes):
+            return obj.hex()
 
         for codec in Codecs.codecs.values():
             if isinstance(obj, codec.target_type):
@@ -44,6 +47,7 @@ class ObjCodec(Codec):
 
         if hasattr(obj, "__dict__"):
             if obj.__class__.__name__ not in ObjTypeRegistry.types:
+                print(ObjTypeRegistry.types)
                 raise TypeError(
                     f"Cannot serialize {type(obj)}: class not registered in ObjTypeRegistry. This error is a safety net for safe decoding."
                 )

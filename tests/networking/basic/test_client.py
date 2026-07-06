@@ -19,7 +19,9 @@ from networking.protocol import Protocol
 from tests.networking.basic.test_handlers import PrintReplyHandler, ReplyHandler
 from networking.handlers.register_handler import RegisterHandler
 from networking.handlers.login_handler import LoginHandler
-from hashing.sha256 import SHA256
+from networking.auth_payload import AuthPayload
+from networking.user_record import UserRecord
+
 
 
 logger = Logger()
@@ -30,8 +32,8 @@ logger.initialize(
     use_colors = True
 )
 
-dummy_record = UserRecord('guest', 'Guest', '')
-client = Client(AddressFamily.IPv4, Protocol.TCP, UserRecord('testuser', 'Test User', 'password123'))
+dummy_record = AuthPayload('guest', '', 'Guest')
+client = Client(AddressFamily.IPv4, Protocol.TCP, dummy_record)
 
 client.add_handler(PrintReplyHandler)
 
@@ -58,7 +60,7 @@ def run_mock_ui():
             display_name = input("Enter your full name: ").strip()
             password = input("Enter a password: ").strip()
             
-            record = UserRecord(name, display_name, password)
+            record = AuthPayload(name, password, display_name)
             
             try:
                 Packet(RegisterHandler.id, record).send(client.sock)
@@ -71,7 +73,7 @@ def run_mock_ui():
             name = input("Enter your username: ").strip()
             password = input("Enter your password: ").strip()
             
-            record = UserRecord(name, "", password)
+            record = AuthPayload(name, password, "")
             
             try:
                 Packet(LoginHandler.id, record).send(client.sock)

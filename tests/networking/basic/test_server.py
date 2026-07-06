@@ -35,7 +35,7 @@ server.add_handler(RegisterHandler)
 server.add_handler(LoginHandler)
 
 try:
-    server.run(hard_reset_database = False, logger = logger)
+    server.run(hard_reset_database = True, logger = logger)
     
     while not server.is_stopping.is_set():
         time.sleep(0.1)

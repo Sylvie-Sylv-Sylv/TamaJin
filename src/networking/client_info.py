@@ -16,7 +16,7 @@ class ClientInfo:
         return f"""
 (
     Socket: {str(self.sock)}
-    User record: ({self.user_record.name}, {self.user_record.username}, {self.user_record.password_hash}, {self.user_record.salt})
+    User record: ({self.user_record.name}, {self.user_record.display_name}, {self.user_record._password_hash}, {self.user_record._salt})
     Authenticated: {str(self.authenticated)}
 )
         """

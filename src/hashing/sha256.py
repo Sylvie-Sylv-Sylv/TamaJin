@@ -12,10 +12,19 @@ class SHA256(Hasher):
         
         return hashed, salt
     
-    def verify_with_salt(self, data: str, hash: str, salt: bytes = None) -> bool:
-        if salt is None:
-            return self._sha256(data.encode('utf-8')) == hash
-        return self._sha256(salt + data.encode('utf-8')) == hash
+    def verify_with_salt(self, data: str, expected_hash: str, salt) -> bool:
+        """Verifies a password against a specific salt and hash."""
+        
+        if isinstance(salt, str):
+            salt_bytes = bytes.fromhex(salt)
+        else:
+            salt_bytes = salt
+            
+        data_bytes = data.encode('utf-8')
+        
+        check_hash = self._sha256(salt_bytes + data_bytes)
+        
+        return check_hash == expected_hash
     
     def hash_raw(self, data: str) -> str:        
         data_bytes = data.encode('utf-8')
