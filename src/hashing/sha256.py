@@ -12,23 +12,23 @@ class SHA256(Hasher):
         hashed = self._sha256(salt + data_bytes)
 
         return hashed, salt
-    
+
     def verify_with_salt(self, data: str, expected_hash: str, salt) -> bool:
         """Verifies a password against a specific salt and hash."""
-        
+
         if isinstance(salt, str):
             salt_bytes = bytes.fromhex(salt)
         else:
             salt_bytes = salt
-            
-        data_bytes = data.encode('utf-8')
-        
+
+        data_bytes = data.encode("utf-8")
+
         check_hash = self._sha256(salt_bytes + data_bytes)
-        
+
         return check_hash == expected_hash
-    
-    def hash_raw(self, data: str) -> str:        
-        data_bytes = data.encode('utf-8')
+
+    def hash_raw(self, data: str) -> str:
+        data_bytes = data.encode("utf-8")
         return self._sha256(data_bytes)
 
     def verify_raw(self, data: str, hash: str) -> bool:

@@ -37,7 +37,7 @@ class ObjCodec(Codec):
 
         if isinstance(obj, dict):
             return {k: ObjCodec.serialize(v) for k, v in obj.items()}
-        
+
         if isinstance(obj, bytes):
             return obj.hex()
 

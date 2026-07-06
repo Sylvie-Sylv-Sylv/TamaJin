@@ -42,7 +42,11 @@ class LoginHandler(Handler):
                     user_auth.name
                 )
 
-                if SHA256().verify_with_salt(user_auth.password, stored_user_record._password_hash, stored_user_record._salt):
+                if SHA256().verify_with_salt(
+                    user_auth.password,
+                    stored_user_record._password_hash,
+                    stored_user_record._salt,
+                ):
                     network_object.clients[sender.getpeername()].user_record = (
                         stored_user_record
                     )
@@ -59,6 +63,4 @@ class LoginHandler(Handler):
 
             except NoRecordFoundError:
                 if logger:
-                    logger.warn(
-                        f"Login failed: User {user_auth.name} does not exist."
-                    )
+                    logger.warn(f"Login failed: User {user_auth.name} does not exist.")
