@@ -2,16 +2,26 @@ from database.record import Record
 
 
 class UserRecord(Record):
-    def __init__(self, name: str, username: str = None, password: str = None):
+    def __init__(self, name: str, username: str = None, password_hash: str = None, salt: bytes = None):
         super().__init__(name)
 
+        self.name = name
         self.username = username
-        self._password = password
+        self._password_hash = password_hash
+        self._salt = salt
 
     @property
-    def password(self):
-        return self._password
+    def password_hash(self):        
+        return self._password_hash
 
-    @password.setter
-    def password(self, value: str):
-        self._password = value
+    @password_hash.setter
+    def password_hash(self, value: str):
+        self._password_hash = value
+
+    @property
+    def salt(self):
+        return self._salt
+    
+    @salt.setter
+    def salt(self, value: bytes):
+        self._salt = value

@@ -19,6 +19,7 @@ from networking.protocol import Protocol
 from tests.networking.basic.test_handlers import PrintReplyHandler, ReplyHandler
 from networking.handlers.register_handler import RegisterHandler
 from networking.handlers.login_handler import LoginHandler
+from hashing.sha256 import SHA256
 
 
 logger = Logger()
