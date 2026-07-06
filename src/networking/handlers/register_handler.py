@@ -43,10 +43,14 @@ class RegisterHandler(Handler):
                     logger.warn(f"User {user_auth.name} already exists.")
             except NoRecordFoundError:
                 hash, salt = SHA256().hash_with_salt(user_auth.password)
-                user_record_save = UserRecord(user_auth.name, user_auth.display_name, hash, salt)
+                user_record_save = UserRecord(
+                    user_auth.name, user_auth.display_name, hash, salt
+                )
                 network_object.database.save(user_record_save)
 
-                network_object.clients[sender.getpeername()].user_record = user_record_save
+                network_object.clients[sender.getpeername()].user_record = (
+                    user_record_save
+                )
                 network_object.clients[sender.getpeername()].authenticated = True
 
                 if logger:
