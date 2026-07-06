@@ -2,7 +2,13 @@ from database.record import Record
 
 
 class UserRecord(Record):
-    def __init__(self, name: str, username: str = None, password_hash: str = None, salt: bytes = None):
+    def __init__(
+        self,
+        name: str,
+        username: str = None,
+        password_hash: str = None,
+        salt: bytes = None,
+    ):
         super().__init__(name)
 
         self.name = name
@@ -11,7 +17,7 @@ class UserRecord(Record):
         self._salt = salt
 
     @property
-    def password_hash(self):        
+    def password_hash(self):
         return self._password_hash
 
     @password_hash.setter
@@ -21,7 +27,7 @@ class UserRecord(Record):
     @property
     def salt(self):
         return self._salt
-    
+
     @salt.setter
     def salt(self, value: bytes):
         self._salt = value
