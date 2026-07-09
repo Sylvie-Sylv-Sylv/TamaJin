@@ -10,7 +10,7 @@ TamaJin is built on six foundational principles that guide every design decision
 
 ### 1. Performance Through Memory Design
 
-The heart of TamaJin is the **SharedChunkBuffer** — a single contiguous NumPy byte buffer that stores all ECS component data. This design isn't about theoretical optimization; it's about what happens when you iterate over thousands of entities every frame. By keeping component data contiguous in memory, we maximize cache hits and minimize the overhead that comes from Python object references. Every component is stored as a numpy dtype, giving us typed views into specific memory regions without the indirection of dictionaries or objects.
+The heart of TamaJin is the **SharedChunkBuffer** - a single contiguous NumPy byte buffer that stores all ECS component data. This design isn't about theoretical optimization; it's about what happens when you iterate over thousands of entities every frame. By keeping component data contiguous in memory, we maximize cache hits and minimize the overhead that comes from Python object references. Every component is stored as a numpy dtype, giving us typed views into specific memory regions without the indirection of dictionaries or objects.
 
 ### 2. Codebase Hygiene
 
@@ -18,7 +18,7 @@ A codebase that grows over years needs rules that everyone follows without think
 
 ### 3. Observability First
 
-When something breaks in production, you need to understand what happened. TamaJin's logging system provides seven levels of verbosity — from TRACE for detailed execution flow to ASSERT for critical failures. Every system logs its actions. Every error carries context. We believe that good logging isn't about catching exceptions; it's about making the system's behavior visible before things go wrong.
+When something breaks in production, you need to understand what happened. TamaJin's logging system provides seven levels of verbosity - from TRACE for detailed execution flow to ASSERT for critical failures. Every system logs its actions. Every error carries context. We believe that good logging isn't about catching exceptions; it's about making the system's behavior visible before things go wrong.
 
 ### 4. Growth Without Rewriting
 
@@ -26,7 +26,7 @@ Games evolve. Features get added, removed, and added again. TamaJin's architectu
 
 ### 5. Configuration Without Compromise
 
-Different games have different needs. An indie prototype might skip complex audio mixing. A shipped product needs every optimization. TamaJin gives you control over every layer — from the audio bus hierarchy to the collision pipeline to the shader compilation. Build what you need, skip what you don't.
+Different games have different needs. An indie prototype might skip complex audio mixing. A shipped product needs every optimization. TamaJin gives you control over every layer - from the audio bus hierarchy to the collision pipeline to the shader compilation. Build what you need, skip what you don't.
 
 ### 6. Architecture That Adapts
 
@@ -56,8 +56,8 @@ Write shaders in Python, not GLSL. Define input variables, compose operations as
 
 ## Dependencies
 
-- `numpy` — Component storage and vector math
-- `pygame` — Physics rendering and windowing
-- `moderngl` — OpenGL rendering
-- `miniaudio` — WAV file loading
-- `PIL` — Image loading for textures
+- `numpy` - Component storage and vector math
+- `pygame` - Physics rendering and windowing
+- `moderngl` - OpenGL rendering
+- `miniaudio` - WAV file loading
+- `PIL` - Image loading for textures
