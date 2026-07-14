@@ -18,11 +18,11 @@ class Health:
 scene = Scene("test_scene", capacity=128)
 
 # register component layouts
-scene.register_component(Position, Position.schema)
+scene.register_component(Position)
 
-scene.register_component(Velocity, Velocity.schema)
+scene.register_component(Velocity)
 
-scene.register_component(Health, Health.schema)
+scene.register_component(Health)
 
 # finalize shared memory layout
 scene.initialize()
